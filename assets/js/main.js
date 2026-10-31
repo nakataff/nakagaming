@@ -1,3 +1,10 @@
+// Usa a URL pública sem index.html, preservando parâmetros e âncoras.
+const indexRoute = window.location.pathname.match(/^\/(?:(sobre|guilda|contato)\/)?index\.html$/);
+if (indexRoute) {
+  const destination = indexRoute[1] ? `/${indexRoute[1]}/` : '/';
+  window.location.replace(destination + window.location.search + window.location.hash);
+}
+
 // Recursos compartilhados. Sem dependências, rastreadores ou dados de sessão.
 document.body.classList.add('js');
 const menuButton = document.querySelector('.menu-toggle');

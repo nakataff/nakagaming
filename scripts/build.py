@@ -4,19 +4,21 @@ import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / 'dist'
-PAGES = ('index.html', 'sobre.html', 'guilda.html', 'contato.html', '404.html')
-PUBLIC_FILES = (*PAGES, 'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml')
+PAGES = ('index.html', 'sobre/index.html', 'guilda/index.html', 'contato/index.html', '404.html')
+ALIASES = ('sobre.html', 'guilda.html', 'contato.html')
+PUBLIC_FILES = (*PAGES, *ALIASES, 'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml')
 
 def build():
     DESTINATION.mkdir(exist_ok=True)
-    # Remove somente arquivos de uma compilação anterior, neste diretório fixo.
     for child in DESTINATION.iterdir():
         if child.is_dir():
             shutil.rmtree(child)
         else:
             child.unlink()
     for name in PUBLIC_FILES:
-        shutil.copy2(ROOT / name, DESTINATION / name)
+        target = DESTINATION / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / name, target)
     shutil.copytree(ROOT / 'assets', DESTINATION / 'assets')
     print(f'Site pronto em {DESTINATION}')
 

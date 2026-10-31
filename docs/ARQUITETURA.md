@@ -12,8 +12,8 @@ A ordem abaixo é uma proposta técnica, não uma lista de recursos já disponí
 
 1. **Conteúdo oficial:** canais de contato, recrutamento, história, elenco e resultados, com dados confirmados.
 2. **Autenticação real:** escolher um provedor de identidade e definir os dados pessoais estritamente necessários.
-3. **Perfis:** páginas próprias, por exemplo `perfil.html`, com módulo de dados separado do código de navegação.
-4. **Membros:** área própria, por exemplo `membros.html`, para funcionalidades da guilda.
+3. **Perfis:** páginas próprias, por exemplo `/perfil/`, com módulo de dados separado do código de navegação.
+4. **Membros:** área própria, por exemplo `/membros/`, para funcionalidades da guilda.
 5. **Administração:** interface própria e autorização de administradores validada pelo backend.
 
 ## Limites do GitHub Pages

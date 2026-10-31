@@ -1179,3 +1179,45 @@ details p {
 .hero-grid>*,.intro-grid>*,.story-grid>*,.community-grid>*,.faq-grid>*,.contact-grid>* {
   min-width:0
 }
+
+/* Canais oficiais e projetos, compartilhados por todas as páginas. */
+.footer-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.footer-social-link svg {
+  width: 15px;
+  height: 15px;
+}
+.footer-social-link:hover {
+  color: var(--white);
+}
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+}
+.contact-grid .button {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .footer-socials {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+  .footer-social-link {
+    justify-content: space-between;
+    max-width: 240px;
+  }
+}

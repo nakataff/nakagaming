@@ -34,7 +34,7 @@ Se optar por delegar o DNS a outro provedor, crie os registros na zona desse pro
 1. Confirme que o domínio personalizado exibido em **Settings → Pages** é `nakagaming.com.br`.
 2. Após salvar o DNS, aguarde sua propagação e a verificação de domínio do GitHub.
 3. Ative **Enforce HTTPS** quando o certificado estiver disponível. Não remova o domínio do Pages durante a espera.
-4. Teste a raiz, `sobre.html`, `guilda.html`, `contato.html` e a versão `www`.
+4. Teste a raiz, `/sobre/`, `/guilda/`, `/contato/` e a versão `www`.
 
 Com o domínio personalizado ativo, `nakataff.github.io/nakagaming/` redireciona para ele. Por isso esse endereço também depende do DNS para funcionar no navegador. Um build concluído não significa que o domínio já está resolvendo.
 

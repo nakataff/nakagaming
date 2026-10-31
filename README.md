@@ -8,13 +8,15 @@ Portal institucional da Naka Gaming, organização de esports e guilda de Free F
 
 ## Páginas
 
-| Arquivo | Conteúdo |
-| --- | --- |
-| `index.html` | Início e apresentação da marca |
-| `sobre.html` | Organização, identidade e princípios |
-| `guilda.html` | Comunidade e perguntas frequentes |
-| `contato.html` | Espaço para os futuros canais oficiais |
-| `404.html` | Página de endereço não encontrado |
+| Endereço público | Arquivo | Conteúdo |
+| --- | --- | --- |
+| `/` | `index.html` | Início e apresentação da marca |
+| `/sobre/` | `sobre/index.html` | Organização, identidade e princípios |
+| `/guilda/` | `guilda/index.html` | Comunidade e perguntas frequentes |
+| `/contato/` | `contato/index.html` | Instagrams e site da Central Free Fire |
+| Página não encontrada | `404.html` | Endereços inexistentes |
+
+As páginas continuam separadas em HTML. O servidor abre o `index.html` de cada pasta sem mostrar o nome do arquivo na URL. Ao abrir `/sobre`, o GitHub Pages pode completar o endereço para `/sobre/`. Os antigos `sobre.html`, `guilda.html` e `contato.html` redirecionam para as novas rotas; visitas explícitas a `index.html` também são normalizadas pelo script compartilhado, preservando parâmetros e âncoras.
 
 HTML por página, CSS e JavaScript compartilhados. Não é necessário instalar pacotes ou compilar para publicar a partir da raiz. Fontes e imagens são locais; não há dependência de CDNs, rastreadores ou serviços externos no carregamento das páginas.
 
@@ -50,13 +52,13 @@ O último comando gera `dist/`, ignorado pelo Git. Ele é opcional e serve para 
 
 O Pages já estava ativo antes da primeira implementação. Novos commits em `main` acionam a publicação automática do GitHub. O workflow `Verificar site` também valida HTML, referências e sintaxe JavaScript; ele não altera a configuração de hospedagem. Na publicação por branch, esse workflow é uma verificação adicional e não bloqueia o build nativo do Pages.
 
-O domínio está declarado em `CNAME`. A resolução externa depende da conclusão da transição de DNS e da configuração no Registro.br. Consulte [Publicação e DNS](docs/PUBLICACAO.md).
+O domínio está declarado em `CNAME`. O DNS deve apontar para o GitHub Pages; o HTTPS é configurado nas opções do Pages. Consulte [Publicação e DNS](docs/PUBLICACAO.md).
 
 ## Editar conteúdo
 
 Edite cada arquivo HTML diretamente. As páginas compartilham a mesma folha de estilos e o mesmo script; cabeçalho e rodapé estão presentes em cada HTML para que a navegação funcione mesmo sem JavaScript. Ao mudar o menu, atualize os cinco HTMLs e execute as verificações.
 
-Não foram inventados integrantes, resultados, patrocinadores ou redes sociais. A página de contato e as perguntas da guilda indicam as informações ainda não publicadas. Atualize esses trechos quando os dados oficiais estiverem definidos.
+Não foram inventados integrantes, resultados, patrocinadores ou redes sociais. Os canais informados pelo responsável estão na página de contato e no rodapé de todas as páginas: @nakagamingx, @nakataff, @centralfreefire_ e centralfreefire.com.br. As perguntas da guilda indicam informações ainda não publicadas.
 
 ## Próximas etapas
 
