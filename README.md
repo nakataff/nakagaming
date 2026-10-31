@@ -95,3 +95,15 @@ O botão de sair encerra a sessão da Naka. Para quem usou a versão local anter
 A configuração pública está em `assets/js/firebase-config.mjs`, usando o projeto `central-free-fire`. A regra isolada está documentada em `firebase/naka-admin.rules.json` e foi incorporada ao `database.rules.json` do repositório `nakataff/ffwsbr`, cujo workflow publica as regras do projeto. Não substitua as regras completas pelo fragmento da Naka.
 
 Se o Firebase retornar `auth/unauthorized-domain`, adicione `nakagaming.com.br` em Authentication → Settings → Authorized domains no projeto correto. Verifique também eventuais restrições de referer da API key, se forem usadas. Não coloque uma service account no frontend.
+
+
+### Liberação do domínio para o login
+
+A chave pública do projeto Central usa restrições de sites no Google Cloud. Para usar o mesmo login na Naka, abra APIs e serviços → Credenciais → chave de API usada pelo app web (final `RknE`) → Restrições do aplicativo → Sites e acrescente estas entradas, preservando as existentes:
+
+- `https://nakagaming.com.br/*`
+- `https://www.nakagaming.com.br/*`
+
+Mantenha as restrições de APIs existentes. Em Firebase Authentication → Settings → Authorized domains, mantenha também os domínios da Naka autorizados para os fluxos de autenticação que exigem essa lista. A senha continua cadastrada uma única vez na conta administrativa existente.
+
+As páginas administrativas usam `strict-origin-when-cross-origin`: o serviço recebe a origem necessária à validação da chave, sem o caminho nem os parâmetros da página. `no-referrer` nessas páginas impediria a validação mesmo com o domínio permitido. A tela de login verifica o acesso público à configuração do serviço antes de habilitar a entrada da senha e mostra uma mensagem específica em caso de bloqueio da chave.

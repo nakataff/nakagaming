@@ -3,10 +3,31 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {validatePublic, validateBackup} from '../assets/js/admin-schema.mjs';
 import {createDraftRepository} from '../assets/js/admin-store.mjs';
-import {isAdminUser, safeAdminPath, ADMIN_EMAIL} from '../assets/js/admin-auth-policy.mjs';
+import {isAdminUser, safeAdminPath, ADMIN_EMAIL, authMessage} from '../assets/js/admin-auth-policy.mjs';
+import {verifyAuthAccess} from '../assets/js/admin-auth-access.mjs';
 const config = JSON.parse(await readFile(new URL('../assets/data/site.json', import.meta.url)));
 const member = {id:'member-1', nick:'Samurai', role:'Jogador', status:'Ativo'};
 const backup = () => ({...structuredClone(config), members:[{...member}]});
+
+test('detecta bloqueio de domínio antes de enviar credenciais e mantém a origem da chamada', async () => {
+  const calls=[];
+  const fetcher=async (...args)=>{
+    calls.push(args);
+    return {ok:false,json:async()=>({error:{details:[{reason:'API_KEY_HTTP_REFERRER_BLOCKED'}]}})};
+  };
+  await assert.rejects(()=>verifyAuthAccess(fetcher,'public-key'),{code:'naka/domain-blocked'});
+  assert.deepEqual(calls,[[
+    'https://identitytoolkit.googleapis.com/v1/projects?key=public-key',
+    {referrerPolicy:'strict-origin-when-cross-origin'}
+  ]]);
+  assert.match(authMessage({code:'naka/domain-blocked'}),/Google Cloud/);
+  assert.match(authMessage({code:'auth/requests-from-referer-https:\/\/nakagaming.com.br\/-are-blocked.'}),/Google Cloud/);
+});
+test('distingue configuração liberada, conexão indisponível e erro do serviço', async () => {
+  await verifyAuthAccess(async()=>({ok:true}),'public-key');
+  await assert.rejects(()=>verifyAuthAccess(async()=>{throw new Error('offline');},'public-key'),{code:'auth/network-request-failed'});
+  await assert.rejects(()=>verifyAuthAccess(async()=>({ok:false,json:async()=>({})}),'public-key'),{code:'naka/auth-service-error'});
+});
 
 test('a exportação pública exclui a lista da guilda e campos desconhecidos', () => {
   const raw = backup(); raw.privateField = 'não publicar';

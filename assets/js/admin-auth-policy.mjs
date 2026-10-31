@@ -12,6 +12,7 @@ export function assertAdmin(user) {
 }
 export function authMessage(error) {
   const code = String(error?.code || '');
+  if (code === 'naka/domain-blocked' || code === 'auth/app-not-authorized' || (code.includes('requests-from-referer') && code.includes('blocked'))) return 'O Google Cloud ainda não liberou nakagaming.com.br para esta chave do Firebase. Adicione o domínio nas restrições de sites da chave; sua senha não foi validada.';
   if (['auth/invalid-credential','auth/wrong-password','auth/user-not-found','auth/invalid-login-credentials'].includes(code)) return 'Não foi possível entrar. Confira a senha do painel da Central Free Fire.';
   if (code === 'auth/too-many-requests') return 'Muitas tentativas. Aguarde um pouco antes de tentar novamente.';
   if (code === 'auth/network-request-failed') return 'Não foi possível conectar. Confira sua conexão e tente novamente.';
