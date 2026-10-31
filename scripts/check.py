@@ -53,7 +53,7 @@ for old, target in ALIASES.items():
 css = ROOT / 'assets/css/styles.css'
 for ref in re.findall(r'url\([\'\"]?(.*?)[\'\"]?\)', css.read_text()):
     assert (css.parent / ref).is_file(), f'CSS: recurso ausente: {ref}'
-ADMIN_ROUTES = {'/admin/': 'admin/index.html', '/admin/site/': 'admin/site/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/backup/': 'admin/backup/index.html'}
+ADMIN_ROUTES = {'/admin/': 'admin/index.html', '/admin/site/': 'admin/site/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/backup/': 'admin/backup/index.html', '/admin/login/': 'admin/login/index.html'}
 for route, name in ADMIN_ROUTES.items():
     page = Page((ROOT / name).read_text())
     assert sum(t == 'h1' for t, a in page.tags) == 1

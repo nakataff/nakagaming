@@ -1,12 +1,14 @@
 import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup} from './admin-schema.mjs';
-import {loadDraft, saveDraft} from './admin-store.mjs';
+import {repository} from './admin-cloud.mjs';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs';
+import {isAdminUser} from './admin-auth-policy.mjs';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
 }
 
 const $ = (selector) => document.querySelector(selector);
-let data, savedAt, revision, dirty = false, removedMember = null, pendingImport = null;
+let data, savedAt, revision, dirty = false, removedMember = null, pendingImport = null, saving = false;
 function feedback(message, error = false) {
   const box = $('#feedback');
   box.textContent = message;
@@ -18,8 +20,18 @@ function showSaved() {
     ? 'Salvo ' + new Intl.DateTimeFormat('pt-BR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}).format(new Date(savedAt))
     : 'Rascunho inicial';
 }
-function persist(next, message) {
-  const result = saveDraft(next, revision);
+async function persist(next, message) {
+  if (saving) throw new Error('Aguarde o salvamento em andamento.');
+  saving = true;
+  $('#admin-content').inert = true;
+  $('#save-state').textContent = 'Salvando na conta…';
+  let result;
+  try { result = await repository.saveDraft(next, revision); }
+  finally {
+    saving = false;
+    $('#save-state').textContent = dirty ? 'Alterações não salvas' : 'Confira o último salvamento';
+    if (!document.body.classList.contains('auth-pending')) $('#admin-content').inert = false;
+  }
   data = result.data; savedAt = result.savedAt; revision = result.revision;
   dirty = false;
   showSaved();
@@ -43,13 +55,13 @@ function setupSite() {
   for (const key of Object.keys(LINK_FIELDS)) form.elements.namedItem(key).value = data.links[key];
   preview();
   form.addEventListener('input', () => { dirty = true; $('#save-state').textContent = 'Alterações não salvas'; preview(); });
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const content = {}, links = {};
     for (const key of Object.keys(CONTENT_FIELDS)) content[key] = form.elements.namedItem(key).value;
     for (const key of Object.keys(LINK_FIELDS)) links[key] = form.elements.namedItem(key).value;
     try {
-      persist({...data, ...validatePublic({schemaVersion:1, content, links})}, 'Rascunho salvo neste navegador. Exporte a configuração para publicar.');
+      await persist({...data, ...validatePublic({schemaVersion:1, content, links})}, 'Rascunho salvo na sua conta. Exporte a configuração para publicar.');
       preview();
     } catch (error) { feedback(error.message, true); }
   });
@@ -98,19 +110,19 @@ function renderMembers() {
 function setupGuild() {
   const form = $('#member-form');
   form.addEventListener('input', () => { dirty = true; $('#save-state').textContent = 'Membro ainda não salvo'; });
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const id = form.elements.namedItem('memberId').value || newMemberId();
     const member = {id, nick:form.elements.namedItem('nick').value.trim(), role:form.elements.namedItem('role').value, status:form.elements.namedItem('status').value};
     const next = structuredClone(data), index = next.members.findIndex((m) => m.id === id);
     if (index < 0) next.members.push(member); else next.members[index] = member;
-    try { persist(next, 'Membro salvo no rascunho local.'); resetMemberForm(); renderMembers(); }
+    try { await persist(next, 'Membro salvo no rascunho da conta.'); resetMemberForm(); renderMembers(); }
     catch (error) { feedback(error.message, true); }
   });
   $('#cancel-edit').addEventListener('click', resetMemberForm);
   $('#member-search').addEventListener('input', renderMembers);
   $('#member-status-filter').addEventListener('change', renderMembers);
-  $('#member-list').addEventListener('click', (event) => {
+  $('#member-list').addEventListener('click', async (event) => {
     const button = event.target.closest('button[data-action]'); if (!button) return;
     const member = data.members.find((m) => m.id === button.dataset.id); if (!member) return;
     if (button.dataset.action === 'edit') {
@@ -121,22 +133,33 @@ function setupGuild() {
     }
     try {
       const next = structuredClone(data); const index = next.members.findIndex((m) => m.id === member.id); next.members.splice(index, 1);
-      persist(next, 'Membro removido do rascunho. Você pode desfazer abaixo da lista.');
+      await persist(next, 'Membro removido do rascunho. Você pode desfazer abaixo da lista.');
       removedMember = {member, index}; $('#undo-box').hidden = false;
       if (form.elements.namedItem('memberId').value === member.id) resetMemberForm();
       renderMembers();
     } catch (error) { feedback(error.message, true); }
   });
-  $('#undo-remove').addEventListener('click', () => {
+  $('#undo-remove').addEventListener('click', async () => {
     if (!removedMember) return;
     try {
       const next = structuredClone(data); next.members.splice(removedMember.index, 0, removedMember.member);
-      persist(next, 'Remoção desfeita.'); removedMember = null; $('#undo-box').hidden = true; renderMembers();
+      await persist(next, 'Remoção desfeita.'); removedMember = null; $('#undo-box').hidden = true; renderMembers();
     } catch (error) { feedback(error.message, true); }
   });
   renderMembers();
 }
 function setupBackup() {
+  const localButton = $('#import-local');
+  try { localButton.hidden = !localStorage.getItem('naka-admin-draft-v1'); } catch { /* Sem rascunho antigo. */ }
+  localButton.addEventListener('click', () => {
+    pendingImport = null; $('#import-review').hidden = true;
+    try {
+      pendingImport = validateBackup(JSON.parse(localStorage.getItem('naka-admin-draft-v1')));
+      $('#import-summary').textContent = `${pendingImport.members.length} membros e os textos/canais do rascunho anterior. Confirme para salvá-los na sua conta.`;
+      $('#import-review').hidden = false;
+      feedback('Rascunho anterior validado. A cópia local será preservada.');
+    } catch { feedback('Não foi possível recuperar o rascunho antigo. Use um arquivo de backup.', true); }
+  });
   $('#export-backup').addEventListener('click', () => {
     download('naka-backup.json', validateBackup(data));
     feedback('Download do backup solicitado. Guarde uma cópia fora deste navegador.');
@@ -153,25 +176,44 @@ function setupBackup() {
       let parsed;
       try { parsed = JSON.parse(await file.text()); } catch { throw new Error('Não foi possível ler o JSON. Selecione um backup válido.'); }
       pendingImport = validateBackup(parsed);
-      $('#import-summary').textContent = `${pendingImport.members.length} membros, 4 canais e os textos do portal. Nenhuma alteração foi aplicada ainda.`;
+      $('#import-summary').textContent = `${pendingImport.members.length} membros, 4 canais e os textos do portal. Nenhuma alteração foi aplicada à conta ainda.`;
       $('#import-review').hidden = false;
       feedback('Backup validado. Revise o resumo antes de confirmar a importação.');
     } catch (error) { feedback(error.message, true); }
   });
   $('#cancel-import').addEventListener('click', () => {
     pendingImport = null; $('#import-review').hidden = true; $('#import-file').value = '';
-    feedback('Importação cancelada. Seu rascunho foi mantido.');
+    feedback('Importação cancelada. O rascunho da conta foi mantido.');
   });
-  $('#confirm-import').addEventListener('click', () => {
+  $('#confirm-import').addEventListener('click', async () => {
     if (!pendingImport) return;
     try {
-      persist(pendingImport, 'Backup importado neste navegador. O site publicado não foi alterado.');
+      await persist(pendingImport, 'Backup importado na sua conta. O site publicado não foi alterado.');
       pendingImport = null; $('#import-review').hidden = true; $('#import-file').value = '';
     } catch (error) { feedback(error.message, true); }
   });
 }
+$('#admin-logout').addEventListener('click', async () => {
+  if (saving) { feedback('Aguarde o salvamento antes de sair.', true); return; }
+  try { await logout(); dirty = false; goToLogin(); }
+  catch { feedback('Não foi possível encerrar a sessão. Tente novamente.', true); }
+});
+$('#auth-retry').addEventListener('click', async () => {
+  try { await logout(); goToLogin(); }
+  catch { $('#auth-loading-message').textContent = 'Não foi possível encerrar a sessão. Recarregue a página.'; }
+});
 try {
-  const loaded = await loadDraft();
+  const user = await currentAdmin();
+  const stopWatching = watchSession((current) => {
+    if (!isAdminUser(current) || current.uid !== user.uid) {
+      dirty = false; data = null; pendingImport = null; removedMember = null;
+      document.body.classList.add('auth-pending');
+      $('#admin-content').replaceChildren();
+      goToLogin();
+    }
+  });
+  const loaded = await repository.loadDraft();
+  if (getCurrentAdmin().uid !== user.uid) throw Object.assign(new Error('A conta conectada mudou.'), {code:'naka/auth-required'});
   data = loaded.data; savedAt = loaded.savedAt; revision = loaded.revision;
   showSaved();
   if (loaded.notice) feedback(loaded.notice, true);
@@ -181,8 +223,18 @@ try {
   if (path === '/admin/guilda/') setupGuild();
   if (path === '/admin/backup/') setupBackup();
   $('#admin-content').inert = false;
-} catch (error) { $('#save-state').textContent = 'Rascunho indisponível'; feedback(error.message, true); }
+  document.body.classList.remove('auth-pending');
+  window.addEventListener('pagehide', () => {
+    document.body.classList.add('auth-pending');
+    $('#admin-content').inert = true;
+    stopWatching();
+  }, {once:true});
+} catch (error) {
+  if (error.code === 'naka/auth-required') goToLogin();
+  else {
+    $('#auth-loading-message').textContent = 'Não foi possível validar o acesso aos dados da conta. Recarregue a página ou confira as permissões do painel.';
+    $('#auth-retry').hidden = false;
+  }
+}
 window.addEventListener('beforeunload', (event) => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
-window.addEventListener('storage', (event) => {
-  if (event.key === 'naka-admin-draft-v1') feedback('O rascunho mudou em outra aba. Recarregue esta página antes de continuar editando.', true);
-});
+window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });

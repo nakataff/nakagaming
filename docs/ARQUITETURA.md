@@ -11,10 +11,10 @@ A identidade visual está centralizada nas variáveis de `assets/css/styles.css`
 A ordem abaixo é uma proposta técnica, não uma lista de recursos já disponíveis:
 
 1. **Conteúdo oficial:** canais de contato, recrutamento, história, elenco e resultados, com dados confirmados.
-2. **Autenticação real:** escolher um provedor de identidade e definir os dados pessoais estritamente necessários.
+2. **Autenticação administrativa:** implementada com a conta existente da Central; futuros membros devem ter identidade e permissões próprias.
 3. **Perfis:** páginas próprias, por exemplo `/perfil/`, com módulo de dados separado do código de navegação.
 4. **Membros:** área própria, por exemplo `/membros/`, para funcionalidades da guilda.
-5. **Administração:** interface própria e autorização de administradores validada pelo backend.
+5. **Administração:** login e rascunhos privados disponíveis; a publicação direta de conteúdo pode ser adicionada depois.
 
 ## Limites do GitHub Pages
 
@@ -24,15 +24,21 @@ Não implemente autenticação somente com JavaScript, um campo no localStorage 
 
 ## Separação quando a plataforma começar
 
-Introduza módulos em `assets/js/services/` para autenticação e dados somente quando o provedor for escolhido. Scripts específicos de cada página devem importar esses serviços; `main.js` continua responsável pela experiência comum do portal. Não há integrações fictícias ou código de login desativado nesta primeira versão.
+Autenticação e dados administrativos usam módulos específicos em `assets/js/`, com Firebase como provedor. Scripts específicos de cada página devem importar esses serviços; `main.js` continua responsável pela experiência comum do portal. Novas funcionalidades de membros devem manter essa separação.
 
 Mantenha credenciais privadas no backend, regras de acesso por usuário e por função, e ambientes separados de teste e produção. Os parâmetros públicos exigidos pelo provedor escolhido não devem ser confundidos com chaves administrativas.
 
 
-## Administração local adicionada
+## Administração autenticada
 
-`/admin/` é a visão geral. `/admin/site/` edita conteúdo e canais; `/admin/guilda/` organiza uma lista local de nicks; `/admin/backup/` exporta e importa dados.
+`/admin/` exige a conta administrativa existente no Firebase Authentication da Central Free Fire. `/admin/login/` usa email/senha com o email administrativo fixo. A senha só é enviada pelo SDK ao serviço de autenticação. Não há cadastro, alteração de senha nem cópia de credenciais entre repositórios.
 
-O painel é público e não autenticado. O noindex e a ausência de links públicos não restringem acesso. Cada navegador guarda seu próprio rascunho, sem API de gravação nem sincronização. Membros não são enviados ao servidor. O backup completo é diferente da configuração pública: somente esta última pode ser aplicada por `scripts/apply-content.mjs`.
+A sessão é gerenciada pelo SDK com persistência de sessão, não por flags de localStorage. Todas as páginas administrativas aguardam a autenticação e uma leitura autorizada de `nakaGamingAdmin/state` antes de mostrar dados. Ao sair, a sessão é encerrada e os dados da interface são removidos.
 
-Os módulos `admin-schema.mjs` e `admin-store.mjs` separam validação e armazenamento da interface `admin.mjs`. A futura autenticação e persistência remota devem substituir esse armazenamento local com regras no backend, sem transformar localStorage em controle de acesso.
+O HTML e o JavaScript continuam estáticos e públicos no GitHub Pages. O controle efetivo de dados está nas regras do Realtime Database: apenas a conta administrativa pode ler/escrever no caminho da Naka. Nenhuma configuração ou dado privado da Central é consultado pelas telas da Naka.
+
+`admin-store.mjs` implementa validação e controle de revisão com transporte injetável. `admin-cloud.mjs` faz leituras pontuais e transações no Firebase, sem listener contínuo do banco. `admin-auth.mjs` gerencia a sessão. `admin-auth-policy.mjs` contém as rotas permitidas e a identidade administrativa, sem segredos.
+
+A lista da guilda e os rascunhos não são públicos. O conteúdo publicado continua em `assets/data/site.json`. O fluxo de exportação e aplicação por commit permanece separado do salvamento privado na conta. A regra isolada da Naka foi mesclada ao arquivo de regras existente do projeto Central, sem alterar os caminhos anteriores.
+
+Backups da versão antiga podem ser recuperados manualmente após o login. A importação exige validação e confirmação; não há migração automática de dados locais para a conta.

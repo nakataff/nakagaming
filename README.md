@@ -18,7 +18,7 @@ Portal institucional da Naka Gaming, organização de esports e guilda de Free F
 
 As páginas continuam separadas em HTML. O servidor abre o `index.html` de cada pasta sem mostrar o nome do arquivo na URL. Ao abrir `/sobre`, o GitHub Pages pode completar o endereço para `/sobre/`. Os antigos `sobre.html`, `guilda.html` e `contato.html` redirecionam para as novas rotas; visitas explícitas a `index.html` também são normalizadas pelo script compartilhado, preservando parâmetros e âncoras.
 
-HTML por página, CSS e JavaScript compartilhados. Não é necessário instalar pacotes ou compilar para publicar a partir da raiz. Fontes e imagens são locais; não há dependência de CDNs, rastreadores ou serviços externos no carregamento das páginas.
+HTML por página, CSS e JavaScript compartilhados. Não é necessário instalar pacotes ou compilar para publicar a partir da raiz. Fontes e imagens são locais. As páginas públicas não dependem de CDNs; o painel administrativo carrega o SDK oficial do Firebase.
 
 ## Organização
 
@@ -63,18 +63,22 @@ Não foram inventados integrantes, resultados, patrocinadores ou redes sociais. 
 
 ## Próximas etapas
 
-Login e perfis ainda não foram implementados. O painel inicial disponível em `/admin/` funciona como editor local com exportação. A separação por página e por recursos permite adicioná-los sem misturar o portal institucional com a plataforma. Leia [Arquitetura e próximos passos](docs/ARQUITETURA.md).
+Login e perfis de membros são etapas futuras. O painel em `/admin/` já usa a conta administrativa da Central Free Fire e salva rascunhos privados no Firebase. A separação por página e por recursos permite evoluir a plataforma sem misturar o portal institucional com o painel. Leia [Arquitetura e próximos passos](docs/ARQUITETURA.md).
 
 A marca e suas imagens pertencem à Naka Gaming. A licença das fontes está em `assets/fonts/LICENSE.txt`.
 
 
-## Painel administrativo inicial
+## Painel administrativo com a conta da Central
 
-Acesse `/admin/`. As telas são separadas em `/admin/site/`, `/admin/guilda/` e `/admin/backup/`, com CSS e módulos JavaScript próprios.
+Acesse `/admin/`. Sem sessão, o painel abre `/admin/login/`. Use a mesma conta administrativa e a mesma senha cadastrada no Firebase Authentication da Central Free Fire. A aplicação não armazena a senha em arquivos, URLs ou backups. O SDK mantém apenas a sessão na aba/navegador até sair ou encerrar a sessão do navegador.
 
-Esta etapa é um editor local, sem autenticação ou sincronização. Textos, links e nicks são rascunhos no armazenamento do navegador. A área é pública, embora excluída do sitemap e marcada como noindex; não cadastre informações privadas. Nenhum botão concede privilégios ou altera o site remoto.
+As telas são separadas em `/admin/site/`, `/admin/guilda/` e `/admin/backup/`, com CSS e módulos JavaScript próprios.
 
-O conteúdo público fica em `assets/data/site.json`. As páginas carregam esse arquivo, mantendo o HTML completo como fallback. Para aplicar uma configuração exportada pelo painel:
+### Dados privados e publicação
+
+O mesmo projeto Firebase é usado para autenticação, mas os rascunhos da Naka ficam exclusivamente em `nakaGamingAdmin/state`, separados dos conteúdos da Central. As regras no servidor permitem leitura e escrita somente para `admin@centralfreefire.com.br`. O painel só mostra os dados depois de uma leitura autorizada no servidor. O noindex e o bloqueio visual não são controles de segurança do banco.
+
+Os rascunhos são sincronizados na conta, com revisão transacional para evitar sobrescrever alterações feitas em outra sessão. Salvar no painel ainda não publica no portal. Para publicar, exporte a configuração e aplique-a ao repositório:
 
 ```sh
 node scripts/apply-content.mjs /caminho/naka-site.json
@@ -82,6 +86,12 @@ python3 scripts/check.py
 node --test tests/admin.test.mjs
 ```
 
-O script valida os dados, atualiza o arquivo público e os textos/links de fallback nos HTMLs. Envie o commit para publicar. Backups completos incluem o rascunho de membros e devem ser guardados separadamente; o aplicador rejeita esses backups para não colocá-los no portal público.
+O script valida os dados, atualiza `assets/data/site.json` e os textos/links de fallback nos HTMLs. Envie o commit para publicar. Backups completos incluem a lista de membros e devem ser guardados separadamente; o aplicador rejeita esses backups para não expor a lista no portal público.
 
-O painel permite importar backups com validação e confirmação, exportar configurações públicas, adicionar/editar/remover membros com desfazer, buscar e filtrar a lista. Conflitos entre abas e falhas no armazenamento são sinalizados. Login, autorização no backend e publicação direta continuam como próxima etapa.
+O botão de sair encerra a sessão da Naka. Para quem usou a versão local anterior, a página de backups oferece recuperação manual do rascunho daquele navegador, com validação e confirmação; a cópia original é preservada. Dados locais nunca são enviados automaticamente.
+
+### Configuração do Firebase
+
+A configuração pública está em `assets/js/firebase-config.mjs`, usando o projeto `central-free-fire`. A regra isolada está documentada em `firebase/naka-admin.rules.json` e foi incorporada ao `database.rules.json` do repositório `nakataff/ffwsbr`, cujo workflow publica as regras do projeto. Não substitua as regras completas pelo fragmento da Naka.
+
+Se o Firebase retornar `auth/unauthorized-domain`, adicione `nakagaming.com.br` em Authentication → Settings → Authorized domains no projeto correto. Verifique também eventuais restrições de referer da API key, se forem usadas. Não coloque uma service account no frontend.
