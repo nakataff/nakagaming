@@ -1,0 +1,20 @@
+name: Verificar site
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar páginas e arquivos
+        run: python3 scripts/check.py
+      - name: Verificar JavaScript
+        run: node --check assets/js/main.js
+      - name: Verificar pacote público
+        run: python3 scripts/build.py
