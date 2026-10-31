@@ -43,6 +43,7 @@ Abra http://localhost:8080. Para verificar antes de enviar:
 ```sh
 python3 scripts/check.py
 node --check assets/js/main.js
+node --test tests/admin.test.mjs
 python3 scripts/build.py
 ```
 
@@ -62,6 +63,25 @@ Não foram inventados integrantes, resultados, patrocinadores ou redes sociais. 
 
 ## Próximas etapas
 
-Login, perfis e painel administrativo não foram implementados nesta etapa. A separação por página e por recursos permite adicioná-los sem misturar o portal institucional com a plataforma. Leia [Arquitetura e próximos passos](docs/ARQUITETURA.md).
+Login e perfis ainda não foram implementados. O painel inicial disponível em `/admin/` funciona como editor local com exportação. A separação por página e por recursos permite adicioná-los sem misturar o portal institucional com a plataforma. Leia [Arquitetura e próximos passos](docs/ARQUITETURA.md).
 
 A marca e suas imagens pertencem à Naka Gaming. A licença das fontes está em `assets/fonts/LICENSE.txt`.
+
+
+## Painel administrativo inicial
+
+Acesse `/admin/`. As telas são separadas em `/admin/site/`, `/admin/guilda/` e `/admin/backup/`, com CSS e módulos JavaScript próprios.
+
+Esta etapa é um editor local, sem autenticação ou sincronização. Textos, links e nicks são rascunhos no armazenamento do navegador. A área é pública, embora excluída do sitemap e marcada como noindex; não cadastre informações privadas. Nenhum botão concede privilégios ou altera o site remoto.
+
+O conteúdo público fica em `assets/data/site.json`. As páginas carregam esse arquivo, mantendo o HTML completo como fallback. Para aplicar uma configuração exportada pelo painel:
+
+```sh
+node scripts/apply-content.mjs /caminho/naka-site.json
+python3 scripts/check.py
+node --test tests/admin.test.mjs
+```
+
+O script valida os dados, atualiza o arquivo público e os textos/links de fallback nos HTMLs. Envie o commit para publicar. Backups completos incluem o rascunho de membros e devem ser guardados separadamente; o aplicador rejeita esses backups para não colocá-los no portal público.
+
+O painel permite importar backups com validação e confirmação, exportar configurações públicas, adicionar/editar/remover membros com desfazer, buscar e filtrar a lista. Conflitos entre abas e falhas no armazenamento são sinalizados. Login, autorização no backend e publicação direta continuam como próxima etapa.

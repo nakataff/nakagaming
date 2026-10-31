@@ -1221,3 +1221,6 @@ details p {
     max-width: 240px;
   }
 }
+
+.hero-title-main, .hero-subtitle { color: inherit; }
+.site-multiline { white-space: pre-line; }

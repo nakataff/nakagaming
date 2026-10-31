@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "content": {
+    "homeTitle": "NOSSO NOME.",
+    "homeSubtitle": "NOSSA",
+    "homeHighlight": "BANDEIRA.",
+    "homeDescription": "A força de uma organização.\nA união de uma guilda. Esse é o nosso caminho.",
+    "aboutIntro": "A Naka Gaming é uma organização de esports e uma guilda de Free Fire.",
+    "aboutDescription": "A referência samurai dá forma à nossa identidade visual e aos valores que queremos levar para o jogo: disciplina para evoluir, respeito por quem está ao lado e compromisso com o coletivo.",
+    "aboutMission": "Nosso símbolo é o ponto de encontro entre a organização e a comunidade. Mais do que um nome na partida, uma bandeira compartilhada.",
+    "guildIntro": "Um espaço para quem compartilha a paixão pelo Free Fire e o orgulho de representar a Naka Gaming.",
+    "contactIntro": "Acompanhe a organização e fale com a gente pelo Instagram.",
+    "footerTagline": "O mesmo símbolo.\nO mesmo propósito."
+  },
+  "links": {
+    "nakaInstagram": "https://www.instagram.com/nakagamingx/",
+    "personalInstagram": "https://www.instagram.com/nakataff/",
+    "centralInstagram": "https://www.instagram.com/centralfreefire_/",
+    "centralSite": "https://centralfreefire.com.br/"
+  }
+}

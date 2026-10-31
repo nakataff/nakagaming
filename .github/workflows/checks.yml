@@ -16,5 +16,7 @@ jobs:
         run: python3 scripts/check.py
       - name: Verificar JavaScript
         run: node --check assets/js/main.js
+      - name: Verificar editor e backups
+        run: node --test tests/admin.test.mjs
       - name: Verificar pacote público
         run: python3 scripts/build.py

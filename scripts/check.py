@@ -3,12 +3,13 @@ from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, urljoin, unquote
 import re
+import json
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 ROUTES = {'/': 'index.html', '/sobre/': 'sobre/index.html', '/guilda/': 'guilda/index.html', '/contato/': 'contato/index.html', '/404.html': '404.html'}
 ALIASES = {'sobre.html': '/sobre/', 'guilda.html': '/guilda/', 'contato.html': '/contato/'}
-SOCIALS = {'https://www.instagram.com/nakagamingx/', 'https://www.instagram.com/nakataff/', 'https://www.instagram.com/centralfreefire_/', 'https://centralfreefire.com.br/'}
+SOCIALS = set(json.loads((ROOT / 'assets/data/site.json').read_text())['links'].values())
 BASE = 'https://nakagaming.com.br'
 
 class Page(HTMLParser):
@@ -52,6 +53,19 @@ for old, target in ALIASES.items():
 css = ROOT / 'assets/css/styles.css'
 for ref in re.findall(r'url\([\'\"]?(.*?)[\'\"]?\)', css.read_text()):
     assert (css.parent / ref).is_file(), f'CSS: recurso ausente: {ref}'
+ADMIN_ROUTES = {'/admin/': 'admin/index.html', '/admin/site/': 'admin/site/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/backup/': 'admin/backup/index.html'}
+for route, name in ADMIN_ROUTES.items():
+    page = Page((ROOT / name).read_text())
+    assert sum(t == 'h1' for t, a in page.tags) == 1
+    assert any(t == 'meta' and a.get('name') == 'robots' and 'noindex' in a.get('content', '') for t, a in page.tags)
+    for ref in page.refs:
+        parsed = urlsplit(urljoin(BASE + route, ref))
+        if parsed.netloc != 'nakagaming.com.br': continue
+        target = ROOT / unquote(parsed.path).lstrip('/')
+        if target.is_dir(): target /= 'index.html'
+        assert target.is_file(), f'{route}: recurso ausente: {ref}'
+        if parsed.fragment and parsed.path == route: assert parsed.fragment in page.ids
+assert 'Disallow: /admin/' in (ROOT / 'robots.txt').read_text()
 assert (ROOT / 'CNAME').read_text().strip() == 'nakagaming.com.br'
 ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
 assert {e.text for e in ET.parse(ROOT / 'sitemap.xml').findall('s:url/s:loc', ns)} == {BASE + route for route in ROUTES if route != '/404.html'}

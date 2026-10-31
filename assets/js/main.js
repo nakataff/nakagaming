@@ -1,8 +1,6 @@
-// Usa a URL pública sem index.html, preservando parâmetros e âncoras.
-const indexRoute = window.location.pathname.match(/^\/(?:(sobre|guilda|contato)\/)?index\.html$/);
-if (indexRoute) {
-  const destination = indexRoute[1] ? `/${indexRoute[1]}/` : '/';
-  window.location.replace(destination + window.location.search + window.location.hash);
+// Mantém a URL pública sem o nome do arquivo index.html.
+if (window.location.pathname.endsWith('/index.html')) {
+  window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
 }
 
 // Recursos compartilhados. Sem dependências, rastreadores ou dados de sessão.
