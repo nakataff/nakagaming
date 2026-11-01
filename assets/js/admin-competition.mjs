@@ -1,7 +1,7 @@
 const $=selector=>document.querySelector(selector);
 const NEW_ID=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID().replaceAll('-',''):Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
 const MODE_NAMES={'free-fire':'Free Fire',hok:'Honor of Kings',valorant:'Valorant',cs2:'CS2'};
-const kindDefs={results:{form:'#competition-result-form',list:'#competition-results-list',name:'resultado'},titles:{form:'#competition-title-form',list:'#competition-titles-list',name:'título'}};
+const kindDefs={results:{form:'#competition-results-form',list:'#competition-results-list',name:'resultado'},titles:{form:'#competition-titles-form',list:'#competition-titles-list',name:'título'}};
 const field=(form,name)=>form.elements.namedItem(name);
 const formatted=date=>date.split('-').reverse().join('/');
 function create(tag,cls,text) {
