@@ -1,3 +1,4 @@
+import {INITIAL_RESULTS} from './competitive-seed.mjs';
 export const CONTENT_FIELDS = {
   newsTitle: ['Título da seção de notícias', 90], newsIntro: ['Apresentação das notícias', 500],
   homeTitle: ['Título principal', 40], homeSubtitle: ['Segunda linha', 30],
@@ -40,7 +41,7 @@ export function validatePublic(input) {
     }
     links[key] = url.href;
   }
-  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []) };
+  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), competition:validateCompetition(input.competition ?? {results:INITIAL_RESULTS,titles:[]}) };
 }
 export function validateBackup(input) {
   const config = validatePublic(input);
@@ -116,7 +117,7 @@ export function validateTeams(input) {
   if (!Array.isArray(input) || input.length>12) throw new Error('Cadastre até 12 equipes.');
   return unique(input.map(raw=>{
     if (!object(raw) || !Array.isArray(raw.players) || raw.players.length>20) throw new Error('Equipe inválida ou com mais de 20 jogadores.');
-    return {id:identity(raw.id,'Equipe'), name:text(raw.name,'Nome da equipe',60), category:optionalText(raw.category,'Categoria',60), description:optionalText(raw.description,'Descrição',600), theme:theme(raw.theme), background:validatePhoto(raw.background), visible:visible(raw.visible), players:unique(raw.players.map(p=>person(p)),'Jogadores')};
+    return {id:identity(raw.id,'Equipe'), name:text(raw.name,'Nome da equipe',60), category:optionalText(raw.category,'Categoria',60), description:optionalText(raw.description,'Descrição',600), theme:theme(raw.theme), background:validatePhoto(raw.background), game:gameId(raw.game), platform:platformId(raw.platform,gameId(raw.game)), visible:visible(raw.visible), players:unique(raw.players.map(p=>person(p)),'Jogadores')};
   }),'Equipes');
 }
 export function validateLeaders(input) {
@@ -128,4 +129,39 @@ export function publicSnapshot(input) {
   config.teams=config.teams.filter(t=>t.visible).map(t=>({...t,players:t.players.filter(p=>p.visible)}));
   config.leaders=config.leaders.filter(p=>p.visible);
   return config;
+}
+
+
+export const COMPETITIVE_GAMES = ['free-fire','hok','valorant','cs2'];
+export const COMPETITIVE_PLATFORMS = ['emulador','mobile','geral'];
+function gameId(value='free-fire') {
+  if (!COMPETITIVE_GAMES.includes(value)) throw new Error('Modalidade inválida.');
+  return value;
+}
+function platformId(value,game='free-fire') {
+  const platform=value ?? (game==='free-fire'?'emulador':'geral');
+  if (game!=='free-fire' && platform!=='geral') throw new Error('A plataforma é exclusiva do Free Fire.');
+  if (!COMPETITIVE_PLATFORMS.includes(platform)) throw new Error('Plataforma inválida.');
+  return platform;
+}
+function competitionUrl(value) {
+  if (!value) return '';
+  let url;
+  try { url=new URL(value); } catch { throw new Error('Link da Liquipedia inválido.'); }
+  if (url.protocol!=='https:' || !['liquipedia.net','www.liquipedia.net'].includes(url.hostname) || !url.pathname.startsWith('/freefire/') && !url.pathname.startsWith('/honorofkings/') && !url.pathname.startsWith('/valorant/') && !url.pathname.startsWith('/counterstrike/')) throw new Error('Use um link HTTPS da Liquipedia.');
+  return url.href;
+}
+function competitionRow(raw,title=false) {
+  if (!object(raw)) throw new Error('Registro competitivo inválido.');
+  const game=gameId(raw.game),date=text(raw.date,'Data do torneio',10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date+'T12:00:00Z')) || new Date(date+'T12:00:00Z').toISOString().slice(0,10)!==date) throw new Error('Data do torneio inválida.');
+  return {id:identity(raw.id,'Resultado'),game,platform:platformId(raw.platform,game),date,tournament:text(raw.tournament,'Torneio',130),
+    tier:optionalText(raw.tier,'Categoria do torneio',30),placement:title?'':optionalText(raw.placement,'Colocação',24),
+    link:competitionUrl(raw.link),note:optionalText(raw.note,'Observação',250),visible:visible(raw.visible)};
+}
+export function validateCompetition(value) {
+  if (!object(value) || !Array.isArray(value.results) || !Array.isArray(value.titles) || value.results.length>500 || value.titles.length>100) throw new Error('Histórico competitivo inválido ou acima do limite.');
+  const results=unique(value.results.map(r=>competitionRow(r)),'Resultados');
+  const titles=unique(value.titles.map(r=>competitionRow(r,true)),'Títulos');
+  return {results,titles};
 }
