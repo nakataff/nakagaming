@@ -1,4 +1,4 @@
-import {validatePhoto,validateInstagram} from './admin-schema.mjs?v=20261101-news';
+import {validatePhoto,validateInstagram} from './admin-schema.mjs?v=20261101-identity';
 import {releaseMedia} from './roster-media.mjs?v=20261101-news';
 import {personCard} from './roster-view.mjs?v=20261101-news';
 import {uploadPhoto} from './admin-media.mjs?v=20261101-news';
