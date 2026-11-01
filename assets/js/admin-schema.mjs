@@ -1,4 +1,4 @@
-import {INITIAL_RESULTS} from './competitive-seed.mjs';
+import {INITIAL_RESULTS} from './competitive-seed.mjs?v=20261101-emufix';
 import {correctLegacyEmulatorHistory} from './competitive-emulator-migration.mjs';
 export const CONTENT_FIELDS = {
   newsTitle: ['Título da seção de notícias', 90], newsIntro: ['Apresentação das notícias', 500],
