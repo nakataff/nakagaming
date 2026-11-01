@@ -128,6 +128,8 @@ export function publicSnapshot(input) {
   const config=validatePublic(input);
   config.teams=config.teams.filter(t=>t.visible).map(t=>({...t,players:t.players.filter(p=>p.visible)}));
   config.leaders=config.leaders.filter(p=>p.visible);
+  config.competition.results=config.competition.results.filter(r=>r.visible);
+  config.competition.titles=config.competition.titles.filter(r=>r.visible);
   return config;
 }
 
