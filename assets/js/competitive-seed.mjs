@@ -1,5 +1,5 @@
-// Histórico inicial informado pela Naka Gaming; links diretos apenas onde verificados.
-// Não inferir colocações ou títulos ausentes nas fontes.
+// Histórico oficial do Emulador corrigido em 2026-11-01 a partir da relação fornecida pela organização.
+// Datas, tiers e colocações são mantidos como informados; a Liga UBFF Season 23 consta na relação Mobile, não Emulador.
 export const INITIAL_RESULTS = [
   {
     "id": "ff-emu-2026-10-01-0",
@@ -8,7 +8,7 @@ export const INITIAL_RESULTS = [
     "date": "2026-10-01",
     "tournament": "Emulador GWL Season 1",
     "tier": "D-Tier",
-    "placement": "9º",
+    "placement": "9th",
     "link": "https://liquipedia.net/freefire/Emulador_GWL",
     "note": "",
     "visible": true
@@ -20,20 +20,8 @@ export const INITIAL_RESULTS = [
     "date": "2026-02-26",
     "tournament": "Copa Dinastia Season 1",
     "tier": "D-Tier",
-    "placement": "11º",
+    "placement": "11th",
     "link": "https://liquipedia.net/freefire/Copa_Dinastia/Season_1",
-    "note": "",
-    "visible": true
-  },
-  {
-    "id": "ff-emu-2026-01-22-2",
-    "game": "free-fire",
-    "platform": "emulador",
-    "date": "2026-01-22",
-    "tournament": "Liga UBFF Season 23",
-    "tier": "D-Tier",
-    "placement": "",
-    "link": "",
     "note": "",
     "visible": true
   },
@@ -44,7 +32,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-09-29",
     "tournament": "Liga Angelical Trials II",
     "tier": "C-Tier",
-    "placement": "22º",
+    "placement": "22nd",
     "link": "",
     "note": "",
     "visible": true
@@ -56,7 +44,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-08-31",
     "tournament": "CPN 13",
     "tier": "B-Tier",
-    "placement": "17º",
+    "placement": "17th",
     "link": "https://liquipedia.net/freefire/CPN/13",
     "note": "",
     "visible": true
@@ -68,7 +56,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-08-27",
     "tournament": "Liga Angelical Trials I",
     "tier": "C-Tier",
-    "placement": "17º",
+    "placement": "17th",
     "link": "",
     "note": "",
     "visible": true
@@ -80,7 +68,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-07-29",
     "tournament": "Alien Cup Season 4 Qualify",
     "tier": "Qualifier",
-    "placement": "15º–16º",
+    "placement": "15th - 16th",
     "link": "",
     "note": "",
     "visible": true
@@ -92,7 +80,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-07-02",
     "tournament": "Copa Amoras Season 4",
     "tier": "C-Tier",
-    "placement": "15º",
+    "placement": "15th",
     "link": "",
     "note": "",
     "visible": true
@@ -104,7 +92,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-06-29",
     "tournament": "Lidoma Showdown 2025",
     "tier": "C-Tier",
-    "placement": "16º",
+    "placement": "16th",
     "link": "",
     "note": "",
     "visible": true
@@ -116,7 +104,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-06-20",
     "tournament": "All In Emulador Serie B 2025 Split 1",
     "tier": "D-Tier",
-    "placement": "7º",
+    "placement": "7th",
     "link": "",
     "note": "",
     "visible": true
@@ -128,7 +116,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-06-07",
     "tournament": "GrandSlam Championship 2025 Split 1",
     "tier": "C-Tier",
-    "placement": "11º",
+    "placement": "11th",
     "link": "",
     "note": "",
     "visible": true
@@ -140,7 +128,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-05-27",
     "tournament": "Loco Por Frifas Season 2",
     "tier": "C-Tier",
-    "placement": "13º",
+    "placement": "13th",
     "link": "",
     "note": "",
     "visible": true
@@ -152,7 +140,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-04-28",
     "tournament": "Lidoma Contenders 2025",
     "tier": "C-Tier",
-    "placement": "19º–20º",
+    "placement": "19th - 20th",
     "link": "",
     "note": "",
     "visible": true
@@ -164,7 +152,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-04-17",
     "tournament": "Copa FLA Season 4",
     "tier": "C-Tier",
-    "placement": "11º",
+    "placement": "11th",
     "link": "",
     "note": "",
     "visible": true
@@ -176,7 +164,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-03-14",
     "tournament": "Liga Alien Amoras Season 2",
     "tier": "C-Tier",
-    "placement": "16º",
+    "placement": "16th",
     "link": "",
     "note": "",
     "visible": true
@@ -188,7 +176,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-02-21",
     "tournament": "Liga Angelical Season 1",
     "tier": "C-Tier",
-    "placement": "13º",
+    "placement": "13th",
     "link": "",
     "note": "",
     "visible": true
@@ -200,7 +188,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-02-12",
     "tournament": "Loco Por Frifas Week 1",
     "tier": "Weekly",
-    "placement": "10º",
+    "placement": "10th",
     "link": "",
     "note": "",
     "visible": true
@@ -212,7 +200,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-02-03",
     "tournament": "Liga Doutrina 2025 Week 1",
     "tier": "Weekly",
-    "placement": "12º",
+    "placement": "12th",
     "link": "",
     "note": "",
     "visible": true
@@ -224,7 +212,7 @@ export const INITIAL_RESULTS = [
     "date": "2025-01-18",
     "tournament": "Grand Slam Super Weekend Emulador Week 1",
     "tier": "Weekly",
-    "placement": "8º",
+    "placement": "8th",
     "link": "",
     "note": "",
     "visible": true
@@ -236,7 +224,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-12-13",
     "tournament": "Esmerald Cup Season 5",
     "tier": "C-Tier",
-    "placement": "",
+    "placement": "15th",
     "link": "",
     "note": "",
     "visible": true
@@ -248,7 +236,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-10-31",
     "tournament": "Copa Flavela Season 1",
     "tier": "D-Tier",
-    "placement": "",
+    "placement": "10th",
     "link": "",
     "note": "",
     "visible": true
@@ -260,7 +248,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-10-30",
     "tournament": "SuperCopa Fora da Safe 2024",
     "tier": "B-Tier",
-    "placement": "",
+    "placement": "17th",
     "link": "",
     "note": "",
     "visible": true
@@ -272,7 +260,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-10-28",
     "tournament": "Copa Amoras Season 2",
     "tier": "D-Tier",
-    "placement": "",
+    "placement": "12th",
     "link": "",
     "note": "",
     "visible": true
@@ -284,7 +272,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-10-27",
     "tournament": "Fora da Safe Relegation 2024",
     "tier": "Qualifier",
-    "placement": "",
+    "placement": "6th",
     "link": "",
     "note": "",
     "visible": true
@@ -296,7 +284,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-10-19",
     "tournament": "Fora da Safe Qualifier 2024",
     "tier": "Qualifier",
-    "placement": "2º",
+    "placement": "2nd",
     "link": "https://liquipedia.net/freefire/Fora_da_Safe/Qualifier/2024",
     "note": "Vice-campeonato e classificação para a Relegation.",
     "visible": true
@@ -308,7 +296,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-10-02",
     "tournament": "Copa GD Season 1",
     "tier": "D-Tier",
-    "placement": "",
+    "placement": "14th",
     "link": "",
     "note": "",
     "visible": true
@@ -320,7 +308,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-09-12",
     "tournament": "Liga Alien Season 1",
     "tier": "B-Tier",
-    "placement": "",
+    "placement": "13th",
     "link": "",
     "note": "",
     "visible": true
@@ -332,7 +320,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-09-08",
     "tournament": "Copa Capão Season 1",
     "tier": "D-Tier",
-    "placement": "",
+    "placement": "13th",
     "link": "",
     "note": "",
     "visible": true
@@ -344,7 +332,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-08-31",
     "tournament": "Copa FLA Season 1",
     "tier": "C-Tier",
-    "placement": "",
+    "placement": "16th",
     "link": "",
     "note": "",
     "visible": true
@@ -356,7 +344,7 @@ export const INITIAL_RESULTS = [
     "date": "2024-08-23",
     "tournament": "Alien Cup Season 3",
     "tier": "D-Tier",
-    "placement": "",
+    "placement": "31st - 33rd",
     "link": "",
     "note": "",
     "visible": true
