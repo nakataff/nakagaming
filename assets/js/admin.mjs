@@ -1,9 +1,9 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-crop';
-import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-crop';
-import {mountRosters} from './admin-rosters.mjs?v=20261101-crop';
-import {clearPublishedCache} from './site-data.mjs?v=20261101-crop';
-import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-crop';
-import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-crop';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-news';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-news';
+import {mountRosters} from './admin-rosters.mjs?v=20261101-news';
+import {clearPublishedCache} from './site-data.mjs?v=20261101-news';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-news';
+import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-news';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
@@ -254,6 +254,10 @@ try {
   if (path === '/admin/site/') setupSite();
   if (path === '/admin/guilda/') setupGuild();
   if (path === '/admin/equipes/' || path === '/admin/guilda/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
+  if (path === '/admin/noticias/') {
+    const [{mountNews},{newsRepository}]=await Promise.all([import('./admin-news.mjs?v=20261101-news'),import('./news-cloud.mjs?v=20261101-news')]);
+    await mountNews({repository:newsRepository,feedback,onBusy,markDirty,isFormDirty:form=>dirtyForms.has(form)});
+  }
   if (path === '/admin/backup/') setupBackup();
   $('#admin-content').inert = false;
   document.body.classList.remove('auth-pending');
