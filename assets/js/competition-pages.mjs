@@ -1,4 +1,4 @@
-import {loadSiteConfig} from './site-data.mjs?v=20261101-news';
+import {loadSiteConfig} from './site-data.mjs?v=20261101-emufix';
 import {personCard} from './roster-view.mjs?v=20261101-news';
 import {releaseMedia} from './roster-media.mjs?v=20261101-news';
 import {placementLabel} from './competition-copy.mjs?v=20261101-copy';
