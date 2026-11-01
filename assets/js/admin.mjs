@@ -1,10 +1,10 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-identity';
-import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-identity';
-import {mountRosters} from './admin-rosters.mjs?v=20261101-identity';
-import {mountCompetition} from './admin-competition.mjs?v=20261101-emufix';
-import {clearPublishedCache} from './site-data.mjs?v=20261101-identity';
-import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-identity';
-import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-identity';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-history';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-history';
+import {mountRosters} from './admin-rosters.mjs?v=20261101-history';
+import {mountCompetition} from './admin-competition.mjs?v=20261101-history';
+import {clearPublishedCache} from './site-data.mjs?v=20261101-history';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-history';
+import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-history';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
@@ -256,8 +256,12 @@ try {
   if (path === '/admin/guilda/') setupGuild();
   if (path === '/admin/equipes/' || path === '/admin/guilda/' || path === '/admin/organizacao/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
   if (path === '/admin/competitivo/') mountCompetition({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form)});
+  if (path === '/admin/historia/') {
+    const {mountHistory}=await import('./admin-history.mjs?v=20261101-history');
+    mountHistory({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
+  }
   if (path === '/admin/noticias/') {
-    const [{mountNews},{newsRepository}]=await Promise.all([import('./admin-news.mjs?v=20261101-news'),import('./news-cloud.mjs?v=20261101-news')]);
+    const [{mountNews},{newsRepository}]=await Promise.all([import('./admin-news.mjs?v=20261101-history'),import('./news-cloud.mjs?v=20261101-history')]);
     await mountNews({repository:newsRepository,feedback,onBusy,markDirty,isFormDirty:form=>dirtyForms.has(form)});
   }
   if (path === '/admin/backup/') setupBackup();

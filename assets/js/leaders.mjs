@@ -1,5 +1,5 @@
-import {loadSiteConfig} from './site-data.mjs?v=20261101-identity';
-import {personCard} from './roster-view.mjs?v=20261101-news';
+import {loadSiteConfig} from './site-data.mjs?v=20261101-history';
+import {personCard} from './roster-view.mjs?v=20261101-history';
 try {
   const config=await loadSiteConfig(),leaders=config.leaders.filter(p=>p.visible),grid=document.querySelector('#leaders-grid');
   for(const leader of leaders) grid.append(personCard(leader,{},true));

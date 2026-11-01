@@ -1,6 +1,6 @@
-import {resultCopyText,placementLabel} from './competition-copy.mjs?v=20261101-copy';
-import {parseResultsText,planResultsImport,applyResultsImport} from './competition-import.mjs?v=20261101-bulk';
-import {validateBackup} from './admin-schema.mjs?v=20261101-emufix';
+import {resultCopyText,placementLabel} from './competition-copy.mjs?v=20261101-history';
+import {parseResultsText,planResultsImport,applyResultsImport} from './competition-import.mjs?v=20261101-history';
+import {validateBackup} from './admin-schema.mjs?v=20261101-history';
 const $=selector=>document.querySelector(selector);
 const NEW_ID=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID().replaceAll('-',''):Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
 const MODE_NAMES={'free-fire':'Free Fire',hok:'Honor of Kings',valorant:'Valorant',cs2:'CS2'};

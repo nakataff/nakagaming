@@ -1,5 +1,6 @@
-import {INITIAL_RESULTS} from './competitive-seed.mjs?v=20261101-emufix';
+import {INITIAL_RESULTS} from './competitive-seed.mjs?v=20261101-history';
 import {correctLegacyEmulatorHistory} from './competitive-emulator-migration.mjs';
+import {HISTORY_DEFAULTS} from './history-defaults.mjs?v=20261101-history';
 export const CONTENT_FIELDS = {
   newsTitle: ['Título da seção de notícias', 90], newsIntro: ['Apresentação das notícias', 500],
   supportApproach: ['Como apoiamos os atletas', 1400], prizePolicy: ['Transparência nas premiações', 1400], lineInvitation: ['Convite para lines competitivas', 600],
@@ -72,7 +73,7 @@ export function validatePublic(input) {
     }
     links[key] = url.href;
   }
-  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), organizationLeaders:validateLeaders(input.organizationLeaders ?? []), competition:validateCompetition(correctLegacyEmulatorHistory(input.competition ?? {results:INITIAL_RESULTS,titles:[]})) };
+  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), organizationLeaders:validateLeaders(input.organizationLeaders ?? []), competition:validateCompetition(correctLegacyEmulatorHistory(input.competition ?? {results:INITIAL_RESULTS,titles:[]})),history:validateHistory(input.history) };
 }
 export function validateBackup(input) {
   const config = validatePublic(input);
@@ -162,6 +163,7 @@ export function publicSnapshot(input) {
   config.organizationLeaders=config.organizationLeaders.filter(p=>p.visible);
   config.competition.results=config.competition.results.filter(r=>r.visible);
   config.competition.titles=config.competition.titles.filter(r=>r.visible);
+  for(const key of ['timeline','players','titles'])config.history[key]=config.history[key].filter(row=>row.visible);
   return config;
 }
 
@@ -199,4 +201,34 @@ export function validateCompetition(value) {
   const results=unique(value.results.map(r=>competitionRow(r)),'Resultados');
   const titles=unique(value.titles.map(r=>competitionRow(r,true)),'Títulos');
   return {results,titles};
+}
+
+function historyInstagram(value='') {
+  if(!value)return '';
+  let url;try{url=new URL(text(value,'Link do Instagram',700));}catch{throw new Error('Informe um link HTTPS do Instagram para a conquista.');}
+  if(url.protocol!=='https:'||url.username||url.password||!['instagram.com','www.instagram.com'].includes(url.hostname)||!url.pathname.split('/').filter(Boolean).length)throw new Error('Informe um link HTTPS do Instagram para a conquista.');
+  return url.href;
+}
+export function validateHistory(value=HISTORY_DEFAULTS) {
+  if(!object(value))throw new Error('História inválida.');
+  const result={};
+  for(const key of ['title','timelineTitle','playersTitle','titlesTitle'])result[key]=text(value[key]??HISTORY_DEFAULTS[key],'Título da história',90);
+  result.intro=text(value.intro??HISTORY_DEFAULTS.intro,'Apresentação da história',4000);
+  for(const [key,max]of [['timeline',30],['players',40],['titles',60]]){
+    const rows=value[key]??HISTORY_DEFAULTS[key];
+    if(!Array.isArray(rows)||rows.length>max)throw new Error('História: cadastre até '+max+' registros em '+key+'.');
+    result[key]=unique(rows.map(raw=>{
+      if(!object(raw))throw new Error('Registro da história inválido.');
+      if(key==='timeline')return {id:identity(raw.id,'Marco'),dateLabel:text(raw.dateLabel,'Data ou período',60),label:text(raw.label,'Tipo de marco',60),title:text(raw.title,'Nome do marco',120),description:text(raw.description,'Descrição do marco',800),visible:visible(raw.visible)};
+      if(key==='players'){
+        const profile=person({...raw,role:raw.role||'Atleta / projeto',photoFit:raw.photoFit??'contain'},false);
+        // Só dados públicos desta seção. Não transporta IDs de jogo ou outros cadastros privados.
+        const {ffId,...publicProfile}=profile;
+        return {...publicProfile,period:optionalText(raw.period,'Período de participação',60),description:text(raw.description,'Descrição da participação',800)};
+      }
+      const frame=person({...raw,nick:'Conquista',role:'Conquista',instagram:'',photoFit:raw.photoFit??'contain'},false);
+      return {id:frame.id,title:text(raw.title,'Nome da conquista',120),dateLabel:optionalText(raw.dateLabel,'Data da conquista',60),description:optionalText(raw.description,'Descrição da conquista',800),photo:frame.photo,theme:frame.theme,photoFit:frame.photoFit,photoPositionX:frame.photoPositionX,photoPosition:frame.photoPosition,photoZoom:frame.photoZoom,instagram:historyInstagram(raw.instagram),visible:frame.visible};
+    }),'História / '+key);
+  }
+  return result;
 }

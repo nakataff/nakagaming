@@ -1,0 +1,46 @@
+[hidden]{display:none!important}
+.history-hero{padding:55px 0 42px;background:linear-gradient(115deg,#101328,#1c2440);border-bottom:1px solid var(--line)}
+.history-hero h1{font-size:clamp(48px,6vw,78px);margin:0 0 25px;max-width:850px;overflow-wrap:anywhere}
+.history-intro{max-width:850px;color:#bdc7df;font-size:16px;line-height:1.8}
+.history-intro p{white-space:pre-line;margin:0 0 17px}
+.history-jump{display:flex;gap:30px;flex-wrap:wrap;margin-top:30px;font-size:12px;color:#d0dafa}
+.history-jump a{padding:9px 0;border-bottom:1px solid #657397}
+.history-section{padding:64px 0 72px;border-bottom:1px solid var(--line)}
+.history-section:nth-of-type(3){background:#15192e}
+.history-section-heading{display:flex;align-items:baseline;gap:24px;margin-bottom:35px}
+.history-section-heading>span{font-size:11px;letter-spacing:.1em;color:#8293b9}
+.history-section-heading h2{font-size:clamp(35px,4vw,54px);margin:0;overflow-wrap:anywhere}
+.history-timeline{list-style:none;padding:0;margin:0;max-width:1020px}
+.history-milestone{display:grid;grid-template-columns:185px minmax(0,1fr);position:relative;margin-left:7px}
+.history-when{color:#b9c9f0;font-size:13px;padding:8px 25px 35px 23px;border-left:1px solid #4f618a;line-height:1.6}
+.history-when:before{content:'';position:absolute;left:-4px;top:13px;width:9px;height:9px;background:#c2cfff;border-radius:50%;outline:5px solid #11152b}
+.history-event{padding:5px 0 32px 32px;border-top:1px solid var(--line)}
+.history-event .eyebrow{font-size:9px;color:#8f9fca;margin:15px 0 9px}
+.history-event h3{font:700 32px/1.12 var(--display);margin:0 0 12px;overflow-wrap:anywhere}
+.history-event-description{color:#aebbd8;font-size:14px;line-height:1.8;max-width:650px;white-space:pre-line;overflow-wrap:anywhere}
+.history-milestone:last-child .history-when{border-color:transparent}
+.history-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 26px}
+.history-card-grid>*{min-width:0}
+.history-card-description{font-size:14px;line-height:1.75;color:#b4c0da;white-space:pre-line;overflow-wrap:anywhere;margin:13px 0 16px}
+.history-period{font-size:11px;color:#91a4cb;line-height:1.6;margin:7px 0 14px}
+.history-person .person-nick,.history-title-card .person-nick{font-size:32px}
+.history-title-image{position:absolute;max-width:none;object-fit:fill}
+.history-title-image.is-default{position:relative;width:100%;height:100%;object-fit:contain;padding:30%;opacity:.7}
+.history-empty{color:#97a6c9;font-size:14px;line-height:1.8;border-top:1px solid var(--line);padding-top:22px;max-width:650px}
+.history-jump a:focus-visible{outline:2px solid #c5d1f5;outline-offset:4px}
+@media(max-width:1000px){.history-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.history-hero{padding:36px 0 30px}.history-hero h1{font-size:47px;margin-bottom:20px}.history-intro{font-size:14px;line-height:1.8}.history-jump{gap:12px 24px;margin-top:20px;font-size:11px}.history-section{padding:40px 0 48px}.history-section-heading{gap:13px;margin-bottom:27px}.history-section-heading h2{font-size:36px}.history-milestone{grid-template-columns:minmax(0,1fr);border-left:1px solid #4f618a;padding-left:21px;margin-left:4px}.history-when{border:0;padding:5px 0 12px;font-size:12px}.history-event{padding:0 0 30px;border-top:0}.history-event .eyebrow{margin:0 0 9px}.history-event h3{font-size:30px}.history-event-description{font-size:13px}.history-milestone:last-child{border-color:transparent}.history-card-grid{gap:30px 18px}.history-card-description{font-size:13px}}
+@media(max-width:540px){.history-card-grid{grid-template-columns:minmax(0,1fr);max-width:390px;margin:auto}.history-card-grid .player-info{padding-top:18px}.history-person .person-nick,.history-title-card .person-nick{font-size:32px}}
+/* Mesma prévia e enquadramento do portal, em um editor simples por seção. */
+.history-admin-jump{display:flex;gap:12px 25px;flex-wrap:wrap;margin:0 0 26px;font-size:13px;color:#4b6092}
+.history-admin-preview{background:#15192e;padding:15px;color:#f7f7fb}
+.history-admin-preview .player-info{padding:20px 2px 8px}
+.history-admin-preview .history-card-description{font-size:12px}
+.history-admin-preview .person-nick{font-size:30px}
+.history-admin-preview .history-milestone{display:block;margin:0}
+.history-admin-preview .history-when{border:0;padding:0 0 12px}
+.history-admin-preview .history-when:before{display:none}
+.history-admin-preview .history-event{padding:0;border:0}
+.history-admin-preview .history-event h3{font-size:26px}
+.history-admin-preview .history-event-description{font-size:13px}
+.history-admin-note{font-size:12px;color:#6b7899;line-height:1.7}

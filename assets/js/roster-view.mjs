@@ -1,5 +1,5 @@
-import {themeAssets,setMedia} from './roster-media.mjs?v=20261101-news';
-import {photoLayout,frameStyles} from './photo-frame.mjs?v=20261101-news';
+import {themeAssets,setMedia} from './roster-media.mjs?v=20261101-history';
+import {photoLayout,frameStyles} from './photo-frame.mjs?v=20261101-history';
 const node=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text)el.textContent=text;return el;};
 export function personCard(person,team={},leader=false) {
   const article=node('article',leader?'leader-card':'player-card');

@@ -1,10 +1,13 @@
-import {photoLayout,frameStyles,dragPhoto} from './photo-frame.mjs?v=20261101-news';
-import {mediaURL} from './roster-media.mjs?v=20261101-news';
-import {validatePhoto} from './admin-schema.mjs?v=20261101-news';
+import {photoLayout,frameStyles,dragPhoto} from './photo-frame.mjs?v=20261101-history';
+import {mediaURL} from './roster-media.mjs?v=20261101-history';
+import {validatePhoto} from './admin-schema.mjs?v=20261101-history';
+let cropSequence=0;
 export function createPhotoCrop({form,getProfile,onApply,feedback,circle=true}) {
+  const headingId='photo-crop-title-'+(++cropSequence);
   const dialog=document.createElement('dialog');dialog.className='photo-crop-dialog';
-  dialog.setAttribute('aria-labelledby','photo-crop-title');
+  dialog.setAttribute('aria-labelledby',headingId);
   dialog.innerHTML='<form method="dialog" class="photo-crop-content"><div class="card-heading"><h2 id="photo-crop-title">Enquadrar foto</h2><button type="button" data-close class="crop-close" aria-label="Fechar enquadramento">×</button></div><p class="crop-instructions">Arraste a foto para ajustar a posição. Use o zoom para aproximar.</p><div class="crop-stage '+(circle?'is-circle':'is-portrait')+'" tabindex="0" role="group" aria-label="Mover foto. Arraste ou use as setas do teclado."><img alt="Prévia do enquadramento" draggable="false"></div><p class="crop-status" role="status" aria-live="polite"></p><label>Zoom <output data-zoom-value>100%</output><input name="zoom" aria-label="Zoom da foto" type="range" min="1" max="3" step="0.05" value="1"></label><div class="field-grid"><label>Posição horizontal<input name="positionX" aria-label="Posição horizontal da foto" type="range" min="0" max="100" step="0.01" value="50"></label><label>Posição vertical<input name="positionY" aria-label="Posição vertical da foto" type="range" min="0" max="100" step="0.01" value="50"></label></div><p class="field-help">Se a foto não se mover em alguma direção, aumente o zoom. Você também pode usar as setas do teclado na prévia.</p><div class="form-buttons"><button type="button" data-apply class="admin-primary" disabled>Aplicar enquadramento</button><button type="button" data-center class="admin-secondary">Centralizar</button><button type="button" data-close class="admin-secondary">Cancelar</button></div><p class="field-help">Depois de aplicar, salve o cadastro e publique no site.</p></form>';
+  dialog.querySelector('h2').id=headingId;
   document.body.append(dialog);
   const stage=dialog.querySelector('.crop-stage'),image=stage.querySelector('img'),status=dialog.querySelector('.crop-status'),apply=dialog.querySelector('[data-apply]');
   const zoom=dialog.querySelector('[name=zoom]'),x=dialog.querySelector('[name=positionX]'),y=dialog.querySelector('[name=positionY]');

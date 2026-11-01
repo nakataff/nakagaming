@@ -1,7 +1,7 @@
 import {get,ref,update,query,orderByChild,limitToLast,endBefore} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js';
-import {database} from './firebase-client.mjs?v=20261101-news';
-import {getCurrentAdmin} from './admin-auth.mjs?v=20261101-news';
-import {createNewsRepository} from './news-store.mjs?v=20261101-news';
+import {database} from './firebase-client.mjs?v=20261101-history';
+import {getCurrentAdmin} from './admin-auth.mjs?v=20261101-history';
+import {createNewsRepository} from './news-store.mjs?v=20261101-history';
 const root=ref(database,'nakaGamingNews');
 export const newsRepository=createNewsRepository({
  getUser:getCurrentAdmin,

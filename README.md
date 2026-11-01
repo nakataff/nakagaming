@@ -146,3 +146,12 @@ Em `/admin/noticias/`, escreva título, resumo opcional, categoria, data exibida
 Notícias ficam em `nakaGamingNews`, com rascunhos privados, índice administrativo, índice público sem corpo e artigos publicados por identificador. Não fazem parte do backup JSON do portal/guilda. O fragmento `firebase/naka-news.rules.json` foi mesclado às regras do projeto Central, preservando os outros caminhos.
 
 As URLs de artigo usam parâmetros porque o GitHub Pages serve HTML estático. O conteúdo e o título são preenchidos no navegador; robôs de compartilhamento sem JavaScript recebem a imagem e os metadados genéricos da Naka. Não foram criadas notícias fictícias na publicação inicial.
+
+
+## História
+
+A aba `/historia/` apresenta a origem da organização, seis marcos iniciais, pessoas que participaram do projeto e uma galeria de títulos/conquistas. Os fatos iniciais foram fornecidos pela gestão; não há jogadores ou títulos fictícios.
+
+Em `/admin/historia/`, edite os textos e a linha do tempo, cadastre pessoas com breve descrição e foto 4:5, ou conquistas com imagem e link para a publicação do Instagram. A prévia usa o mesmo enquadramento da página pública. O ajuste abre automaticamente após upload, com arraste, zoom e posição nos dois eixos. Pessoas usam até 480 × 720 px; artes de conquistas, até 960 × 1200 px. Ambos continuam limitados a 75 KB por imagem.
+
+É possível reordenar, ocultar, remover e desfazer a última remoção. Salvar altera o rascunho da conta; **Publicar no site** atualiza a história junto com o portal. Backups completos preservam o histórico e seu enquadramento. Cadastros antigos recebem a história inicial sem perder equipes, resultados, diretores ou membros. Listas explicitamente vazias não são repovoadas.

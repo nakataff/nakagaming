@@ -7,7 +7,7 @@ import json
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-ROUTES = {'/': 'index.html', '/noticias/': 'noticias/index.html', '/noticias/ler/': 'noticias/ler/index.html', '/sobre/': 'sobre/index.html', '/equipes/': 'equipes/index.html', '/equipes/free-fire/': 'equipes/free-fire/index.html', '/equipes/hok/': 'equipes/hok/index.html', '/equipes/valorant/': 'equipes/valorant/index.html', '/equipes/cs2/': 'equipes/cs2/index.html', '/guilda/': 'guilda/index.html', '/contato/': 'contato/index.html', '/404.html': '404.html'}
+ROUTES = {'/historia/': 'historia/index.html', '/': 'index.html', '/noticias/': 'noticias/index.html', '/noticias/ler/': 'noticias/ler/index.html', '/sobre/': 'sobre/index.html', '/equipes/': 'equipes/index.html', '/equipes/free-fire/': 'equipes/free-fire/index.html', '/equipes/hok/': 'equipes/hok/index.html', '/equipes/valorant/': 'equipes/valorant/index.html', '/equipes/cs2/': 'equipes/cs2/index.html', '/guilda/': 'guilda/index.html', '/contato/': 'contato/index.html', '/404.html': '404.html'}
 ALIASES = {'sobre.html': '/sobre/', 'guilda.html': '/guilda/', 'contato.html': '/contato/'}
 SOCIALS = set(json.loads((ROOT / 'assets/data/site.json').read_text())['links'].values())
 BASE = 'https://nakagaming.com.br'
@@ -53,7 +53,7 @@ for old, target in ALIASES.items():
 css = ROOT / 'assets/css/styles.css'
 for ref in re.findall(r'url\([\'\"]?(.*?)[\'\"]?\)', css.read_text()):
     assert (css.parent / ref).is_file(), f'CSS: recurso ausente: {ref}'
-ADMIN_ROUTES = {'/admin/': 'admin/index.html', '/admin/noticias/': 'admin/noticias/index.html', '/admin/site/': 'admin/site/index.html', '/admin/equipes/': 'admin/equipes/index.html', '/admin/competitivo/': 'admin/competitivo/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/organizacao/': 'admin/organizacao/index.html', '/admin/backup/': 'admin/backup/index.html', '/admin/login/': 'admin/login/index.html'}
+ADMIN_ROUTES = {'/admin/historia/': 'admin/historia/index.html', '/admin/': 'admin/index.html', '/admin/noticias/': 'admin/noticias/index.html', '/admin/site/': 'admin/site/index.html', '/admin/equipes/': 'admin/equipes/index.html', '/admin/competitivo/': 'admin/competitivo/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/organizacao/': 'admin/organizacao/index.html', '/admin/backup/': 'admin/backup/index.html', '/admin/login/': 'admin/login/index.html'}
 for route, name in ADMIN_ROUTES.items():
     page = Page((ROOT / name).read_text())
     assert sum(t == 'h1' for t, a in page.tags) == 1

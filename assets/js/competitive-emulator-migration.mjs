@@ -1,7 +1,7 @@
 // Compatibilidade com dados já publicados no Firebase e rascunhos anteriores.
 // Atualiza apenas posições que ainda correspondem exatamente à importação antiga.
 // Nunca modifica times, Mobile, registros personalizados, links ou outros campos.
-import {INITIAL_RESULTS} from './competitive-seed.mjs?v=20261101-emufix';
+import {INITIAL_RESULTS} from './competitive-seed.mjs?v=20261101-history';
 const OLD_EMULATOR_PLACEMENTS = {
   "ff-emu-2026-10-01-0": "9º",
   "ff-emu-2026-02-26-1": "11º",

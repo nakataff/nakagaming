@@ -1,8 +1,8 @@
-import {loadSiteConfig} from './site-data.mjs?v=20261101-identity';
-import {personCard} from './roster-view.mjs?v=20261101-news';
-import {releaseMedia} from './roster-media.mjs?v=20261101-news';
-import {placementLabel} from './competition-copy.mjs?v=20261101-copy';
-import {DEFAULT_RESULTS_SORT,resultDisplayRows,nextResultSort} from './competition-sort.mjs?v=20261101-sort';
+import {loadSiteConfig} from './site-data.mjs?v=20261101-history';
+import {personCard} from './roster-view.mjs?v=20261101-history';
+import {releaseMedia} from './roster-media.mjs?v=20261101-history';
+import {placementLabel} from './competition-copy.mjs?v=20261101-history';
+import {DEFAULT_RESULTS_SORT,resultDisplayRows,nextResultSort} from './competition-sort.mjs?v=20261101-history';
 
 const root=document.querySelector('[data-competition-page]');
 const GAME_NAMES={'free-fire':'FREE FIRE',hok:'HONOR OF KINGS',valorant:'VALORANT',cs2:'COUNTER-STRIKE 2'};

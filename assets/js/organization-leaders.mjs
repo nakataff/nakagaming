@@ -1,5 +1,5 @@
-import {loadSiteConfig} from './site-data.mjs?v=20261101-identity';
-import {personCard} from './roster-view.mjs?v=20261101-news';
+import {loadSiteConfig} from './site-data.mjs?v=20261101-history';
+import {personCard} from './roster-view.mjs?v=20261101-history';
 try {
   const config=await loadSiteConfig();
   const grid=document.querySelector('#organization-leaders-grid'),empty=document.querySelector('#organization-leaders-empty');

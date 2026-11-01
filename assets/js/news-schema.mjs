@@ -1,4 +1,4 @@
-import {validatePhoto} from './admin-schema.mjs?v=20261101-news';
+import {validatePhoto} from './admin-schema.mjs?v=20261101-history';
 export const NEWS_CATEGORIES=['Resultados','Novidades','Projetos','Organização'];
 export const NEWS_STATUSES=['draft','published','archived'];
 export function newsId(){return String(Date.now())+'-'+(typeof crypto.randomUUID==='function'?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,'0')).join(''));}

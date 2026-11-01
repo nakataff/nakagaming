@@ -1,8 +1,8 @@
-import {loadNewsPage,loadNewsArticle} from './news-data.mjs?v=20261101-news';
-import {newsCard,newsTextItem,articleParagraphs} from './news-view.mjs?v=20261101-news-home';
-import {mountNewsCarousel} from './news-carousel.mjs?v=20261101-news-home';
-import {formatNewsDate,articleURL} from './news-schema.mjs?v=20261101-news';
-import {setMedia} from './roster-media.mjs?v=20261101-news';
+import {loadNewsPage,loadNewsArticle} from './news-data.mjs?v=20261101-history';
+import {newsCard,newsTextItem,articleParagraphs} from './news-view.mjs?v=20261101-history';
+import {mountNewsCarousel} from './news-carousel.mjs?v=20261101-history';
+import {formatNewsDate,articleURL} from './news-schema.mjs?v=20261101-history';
+import {setMedia} from './roster-media.mjs?v=20261101-history';
 const grid=document.querySelector('[data-news-grid]');
 if(grid){
  const home=grid.dataset.newsGrid==='home',status=document.querySelector('#news-status'),more=document.querySelector('#news-more');let cursor=null,busy=false;

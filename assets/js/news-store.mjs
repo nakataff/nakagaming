@@ -1,5 +1,5 @@
-import {assertAdmin} from './admin-auth-policy.mjs?v=20261101-news';
-import {validateNewsArticle,validateNewsMeta,newsMetadata,validNewsId} from './news-schema.mjs?v=20261101-news';
+import {assertAdmin} from './admin-auth-policy.mjs?v=20261101-history';
+import {validateNewsArticle,validateNewsMeta,newsMetadata,validNewsId} from './news-schema.mjs?v=20261101-history';
 export function createNewsRepository({getUser,readRecord,listRecords,write}){
  function owner(){return assertAdmin(getUser());}
  function same(user){if(owner().uid!==user.uid)throw new Error('A sessão mudou. Entre novamente.');}

@@ -41,3 +41,10 @@
 - Lines interessadas em representar a organização entram em contato por Instagram via `links.personalInstagram` (atualmente @nakataff). Recrutamento da guilda usa outro canal (`links.guildInstagram`).
 - `organizationLeaders` é a direção da organização, gerenciada em `/admin/organizacao/` e exibida em `/sobre/#direcao`. `leaders` permanece exclusivamente a liderança da guilda em `/admin/guilda/` e `/guilda/#lideranca`. Não misturar os cadastros nem inferir nomes.
 - Os textos `supportApproach`, `prizePolicy` e `lineInvitation` são editáveis em `/admin/site/`; migrar somente valores que ainda correspondem exatamente às cópias antigas, preservando os personalizados.
+
+## História da organização
+
+- `/historia/` reúne a trajetória, participantes notáveis e a galeria de conquistas; a gestão usa `/admin/historia/`. Não confundir participantes históricos com elenco atual ou líderes da guilda.
+- A linha do tempo inicial usa somente fatos informados pela gestão: Nakata Revela (início de 2024), Nakateam Mobile (fev/2024), Emulador e Honor of Kings (ago/2024), nome Naka Gaming (set/2024) e seletiva para a LAFF (ago/2025). Não inventar dia exato, classificação para a LAFF ou vínculo oficial com a Garena.
+- Todos os textos, marcos, participantes, fotos, enquadramento 4:5, descrições, ordem, visibilidade e links da galeria são editáveis no painel. `history` ausente recebe esses padrões; listas vazias explícitas permanecem vazias. Pessoas e títulos iniciais são vazios.
+- `publicSnapshot()` deve filtrar registros históricos ocultos. As fotos são referências para a mesma mídia separada já existente; preservar transparência e limite de 75 KB. A galeria de conquistas é editorial e não altera automaticamente as tabelas competitivas.

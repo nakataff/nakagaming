@@ -1,5 +1,5 @@
-import {setMedia} from './roster-media.mjs?v=20261101-news';
-import {formatNewsDate,articleURL} from './news-schema.mjs?v=20261101-news';
+import {setMedia} from './roster-media.mjs?v=20261101-history';
+import {formatNewsDate,articleURL} from './news-schema.mjs?v=20261101-history';
 const make=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text)el.textContent=text;return el;};
 export function newsCard(article){
  const card=make('article','news-card'),link=make('a','news-card-link');link.href=articleURL(article.id);

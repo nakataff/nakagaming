@@ -69,3 +69,10 @@ Os índices usam `sortKey` composto da data exibida e identificador, com índice
 A capa é uma referência única compartilhada entre card e artigo. O conversor permite dimensões maiores para capas e mantém o limite de 75 KB/110.000 caracteres do transporte de mídia existente. Perfis não mudam seus limites. Não há listeners contínuos de notícias. O backup de configuração geral do portal não inclui este namespace independente.
 
 Na home, `news-carousel.mjs` usa rolagem nativa e scroll snap apenas no mobile, com botões acessíveis e setas do teclado. Não há reprodução automática nem dependência de carrossel. As bolinhas acompanham a posição ao deslizar e respeitam movimento reduzido. A navegação mostra somente a quantidade real de destaques.
+
+
+## História
+
+`history` compõe a configuração validada e o mesmo snapshot público do portal. `history-defaults.mjs` fornece textos e seis marcos informados pela gestão; `players` e `titles` começam vazios. A validação mantém limites de lista/texto, referências de mídia, links HTTPS do Instagram e geometria de recorte. `publicSnapshot` filtra a visibilidade de cada lista. Não há nova regra de banco, listener ou SDK no público.
+
+`history.mjs` reutiliza o leitor REST/cache e monta os registros com `textContent`. A página tem fallback HTML da narrativa e da linha do tempo inicial. `admin-history.mjs` usa o repositório administrativo existente, transações com revisão e publicação geral; os uploads reutilizam a mídia separada. Cards de participantes e a prévia do admin compartilham `personCard`; conquistas usam a mesma matemática de recorte 4:5. Os dois editores de fotos têm diálogos com IDs próprios.

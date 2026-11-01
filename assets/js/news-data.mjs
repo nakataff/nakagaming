@@ -1,5 +1,5 @@
-import {firebaseConfig} from './firebase-config.mjs?v=20261101-news';
-import {validateNewsMeta,validateNewsArticle,validNewsId} from './news-schema.mjs?v=20261101-news';
+import {firebaseConfig} from './firebase-config.mjs?v=20261101-history';
+import {validateNewsMeta,validateNewsArticle,validNewsId} from './news-schema.mjs?v=20261101-history';
 const PREFIX='naka-news-v1:',TTL=120000,pending=new Map();
 async function request(path){
  const key=PREFIX+path;

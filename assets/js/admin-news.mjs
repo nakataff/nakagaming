@@ -1,8 +1,8 @@
-import {newsId,validateNewsArticle,newsMetadata,todayInBrazil,articleURL,formatNewsDate} from './news-schema.mjs?v=20261101-news';
-import {newsCard} from './news-view.mjs?v=20261101-news';
-import {uploadPhoto} from './admin-media.mjs?v=20261101-news';
-import {releaseMedia} from './roster-media.mjs?v=20261101-news';
-import {clearNewsCache} from './news-data.mjs?v=20261101-news';
+import {newsId,validateNewsArticle,newsMetadata,todayInBrazil,articleURL,formatNewsDate} from './news-schema.mjs?v=20261101-history';
+import {newsCard} from './news-view.mjs?v=20261101-history';
+import {uploadPhoto} from './admin-media.mjs?v=20261101-history';
+import {releaseMedia} from './roster-media.mjs?v=20261101-history';
+import {clearNewsCache} from './news-data.mjs?v=20261101-history';
 const $=s=>document.querySelector(s);
 export async function mountNews({repository,feedback,onBusy,markDirty,isFormDirty}){
  const form=$('#news-form'),field=name=>form.elements.namedItem(name);let current,items=[],cursor=null,loading=false;
