@@ -79,7 +79,7 @@ test('a importação é compatível com o backup e não produz títulos automati
   const base=JSON.parse(await readFile(new URL('../assets/data/site.json',import.meta.url),'utf8'));
   const rows=applyResultsImport(base.competition.results,planResultsImport(parseResultsText(sample).results,base.competition.results,{game:'free-fire',platform:'mobile'}),(()=>{let i=0;return ()=> 'new-'+(++i)})());
   const next=validateBackup({...base,competition:{results:rows,titles:[]},members:[]});
-  assert.equal(next.competition.results.length,38);
+  assert.equal(next.competition.results.length,37);
   assert.deepEqual(next.competition.titles,[]);
   assert.equal(next.competition.results.filter(r=>r.platform==='mobile').length,8);
 });

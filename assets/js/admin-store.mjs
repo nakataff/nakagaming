@@ -1,4 +1,4 @@
-import {validateBackup} from './admin-schema.mjs?v=20261101-news';
+import {validateBackup} from './admin-schema.mjs?v=20261101-emufix';
 import {assertAdmin} from './admin-auth-policy.mjs?v=20261101-news';
 
 // Transporte injetável: a interface só recebe dados depois da leitura autorizada.

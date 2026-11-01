@@ -1,4 +1,4 @@
-import {validatePublic} from './admin-schema.mjs?v=20261101-news';
+import {validatePublic} from './admin-schema.mjs?v=20261101-emufix';
 import {firebaseConfig} from './firebase-config.mjs?v=20261101-news';
 const CACHE_KEY='naka-public-site-v2', TTL=120000;
 let pending;

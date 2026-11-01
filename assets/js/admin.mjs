@@ -1,7 +1,7 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-news';
-import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-news';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-emufix';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-emufix';
 import {mountRosters} from './admin-rosters.mjs?v=20261101-news';
-import {mountCompetition} from './admin-competition.mjs?v=20261101-bulk';
+import {mountCompetition} from './admin-competition.mjs?v=20261101-emufix';
 import {clearPublishedCache} from './site-data.mjs?v=20261101-news';
 import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-news';
 import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-news';
