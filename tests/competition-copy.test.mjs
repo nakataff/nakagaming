@@ -33,10 +33,11 @@ test('nenhum filtro não cria colocações ou nomes de torneio fictícios',()=>{
   const copied=resultCopyText([],{gameName:'CS2'});
   assert.match(copied,/Nenhum resultado encontrado/);
 });
-test('todas as modalidades e o painel têm controles de cópia e exibição da colocação',async()=>{
+test('exportação continua disponível no admin, mas não nas páginas públicas',async()=>{
   for(const game of ['free-fire','hok','valorant','cs2']){
     const html=await readFile(new URL('../equipes/'+game+'/index.html',import.meta.url),'utf8');
-    for(const id of ['copy-results-button','copy-show-placement','result-copy-format','copy-results-status','result-copy-preview'])assert.ok(html.includes('id="'+id+'"'),game+': '+id);
+    assert.ok(!html.includes('id="copy-results-button"'),game);
+    assert.ok(!html.includes('id="copy-show-placement"'),game);
   }
   const admin=await readFile(new URL('../admin/competitivo/index.html',import.meta.url),'utf8');
   assert.ok(admin.includes('id="copy-admin-results"'));
