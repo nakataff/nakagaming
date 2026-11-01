@@ -51,3 +51,13 @@ test('não aceita URLs externas, datas inválidas nem IDs repetidos',()=>{
   data.competition.results.push(record());
   assert.throws(()=>validatePublic(data),/duplicados/i);
 });
+
+test('o editor usa os formulários que existem na página administrativa',async()=>{
+  const html=await readFile(new URL('../admin/competitivo/index.html',import.meta.url),'utf8');
+  const script=await readFile(new URL('../assets/js/admin-competition.mjs',import.meta.url),'utf8');
+  for(const kind of ['results','titles']){
+    assert.match(html,new RegExp('id="competition-'+kind+'-form"'));
+    assert.ok(script.includes("form:'#competition-"+kind+"-form'"));
+    assert.match(html,new RegExp('id="competition-'+kind+'-list"'));
+  }
+});
