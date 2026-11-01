@@ -1,4 +1,6 @@
 import {resultCopyText,placementLabel} from './competition-copy.mjs?v=20261101-copy';
+import {parseResultsText,planResultsImport,applyResultsImport} from './competition-import.mjs?v=20261101-bulk';
+import {validateBackup} from './admin-schema.mjs?v=20261101-news';
 const $=selector=>document.querySelector(selector);
 const NEW_ID=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID().replaceAll('-',''):Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
 const MODE_NAMES={'free-fire':'Free Fire',hok:'Honor of Kings',valorant:'Valorant',cs2:'CS2'};
@@ -108,6 +110,106 @@ export function mountCompetition({getData,persist,feedback,markDirty,isFormDirty
     form.querySelector('[data-cancel]').addEventListener('click',()=>{if(checkAbandon(form))resetForm(kind);});
     resetForm(kind);
   }
+
+  function mountBulkImport(){
+    const form=$('#competition-import-form');
+    if(!form)return;
+    const target=$('#competition-import-text');
+    const game=field(form,'game'),platform=field(form,'platform'),duplicateMode=field(form,'duplicateMode');
+    const previewButton=$('#competition-import-preview'),applyButton=$('#competition-import-apply');
+    const review=$('#competition-import-review'),summary=$('#competition-import-summary'),errors=$('#competition-import-errors');
+    const list=$('#competition-import-list'),message=$('#competition-import-feedback'),clear=$('#competition-import-clear');
+    let snapshot=null;
+    function platformForGame(reset=false){
+      if(game.value!=='free-fire'){
+        platform.value='geral';platform.disabled=true;
+      }else{
+        platform.disabled=false;
+        if(reset||platform.value==='geral')platform.value='emulador';
+      }
+    }
+    function discardPreview(){
+      snapshot=null;applyButton.disabled=true;review.hidden=true;message.textContent=target.value.trim()?'Texto alterado. Confira a prévia antes de importar.':'';
+    }
+    function clearForm(){
+      form.reset();platformForGame(true);
+      target.value='';discardPreview();message.textContent='';markDirty(form,false);
+    }
+    function prepared(){
+      const parsed=parseResultsText(target.value);
+      if(parsed.errors.length)return {...parsed,plan:null};
+      return {...parsed,plan:planResultsImport(parsed.results,getData().competition.results,{
+        game:game.value,platform:platform.value,mode:duplicateMode.value})};
+    }
+    function drawPreview(){
+      snapshot=null;applyButton.disabled=true;review.hidden=false;errors.replaceChildren();list.replaceChildren();
+      const result=prepared();
+      if(result.errors.length){
+        for(const error of result.errors)errors.append(create('p','',error));
+        summary.textContent='Importação bloqueada: revise '+result.errors.length+' problema(s). Nenhum resultado foi salvo.';
+        message.textContent='Revise as mensagens da prévia.';
+        return;
+      }
+      const plan=result.plan;
+      const {add,update,skip}=plan.counts;
+      const current=getData().competition.results.length;
+      summary.textContent=result.results.length+' resultados identificados · '+add+' novos · '+update+' atualizações · '+skip+' ignorados. Total atual no rascunho: '+current+'.';
+      if(current+add>500){errors.append(create('p','','O histórico ultrapassaria o limite de 500 resultados. Remova alguns ou importe um lote menor.'));message.textContent='Limite do cadastro atingido.';return;}
+      for(const entry of plan.entries){
+        const row=create('div','competition-import-row');
+        const info=create('div','');
+        info.append(create('strong','',entry.record.tournament));
+        info.append(create('small','',entry.record.date+' · '+entry.record.tier+' · Colocação: '+placementLabel(entry.record.placement)));
+        const status=entry.status==='add'?'Novo':entry.status==='update'?'Atualizar':'Ignorar';
+        const badge=create('span','competition-import-badge'+(entry.status==='add'?' is-new':entry.status==='update'?' is-updated':''),status);
+        if(entry.status==='skip'&&entry.prior)badge.title='Este torneio já existe na modalidade e plataforma escolhidas.';
+        if(entry.status==='skip'&&!entry.prior)badge.title='Este resultado aparece mais de uma vez no texto colado.';
+        row.append(info,badge);list.append(row);
+      }
+      snapshot={source:target.value,game:game.value,platform:platform.value,mode:duplicateMode.value};
+      applyButton.disabled=add+update===0;
+      applyButton.textContent=(add+update>0?'Importar '+add+' novo(s)'+(update?' e atualizar '+update:''):'Nada novo para importar');
+      message.textContent='A prévia ainda não altera o site. Ao importar, os dados são salvos no rascunho; depois use Publicar no site.';
+    }
+    game.addEventListener('change',()=>{platformForGame(true);discardPreview();});
+    [platform,duplicateMode,target].forEach(input=>input.addEventListener('input',discardPreview));
+    [platform,duplicateMode].forEach(input=>input.addEventListener('change',discardPreview));
+    previewButton.addEventListener('click',drawPreview);
+    clear.addEventListener('click',clearForm);
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      if(!snapshot){message.textContent='Confira a prévia novamente antes de importar.';return;}
+      if(target.value!==snapshot.source||game.value!==snapshot.game||platform.value!==snapshot.platform||duplicateMode.value!==snapshot.mode){
+        discardPreview();message.textContent='Os dados foram alterados. Gere a prévia novamente.';return;
+      }
+      for(const kind of Object.keys(kindDefs)){
+        if(isFormDirty($(kindDefs[kind].form))){
+          message.textContent='Salve ou cancele as alterações nos formulários individuais antes de importar.';
+          return;
+        }
+      }
+      const result=prepared();
+      if(result.errors.length||!result.plan||result.plan.counts.add+result.plan.counts.update===0){
+        drawPreview();return;
+      }
+      const next=structuredClone(getData());
+      try {
+        next.competition.results=applyResultsImport(next.competition.results,result.plan,()=> 'import-'+NEW_ID());
+        // Validação centralizada, inclusive dos limites e da lista privada.
+        validateBackup(next);
+        await persist(next,result.plan.counts.add+' novos resultados e '+result.plan.counts.update+' atualizações salvos no rascunho. Clique em Publicar no site.',form);
+        const importedGame=game.value,importedPlatform=platform.value;
+        clearForm();
+        filters.game.value=importedGame;
+        filters.platform.value=importedPlatform;filters.search.value='';
+        render();
+        message.textContent='Importação concluída no rascunho. Use Publicar no site para colocar os resultados no ar.';
+      }catch(error){message.textContent='Não foi possível importar: '+error.message;feedback(error.message,true);}
+    });
+    platformForGame();
+    markDirty(form,false);
+  }
+  mountBulkImport();
   const copyAll=$('#copy-admin-results');
   if(copyAll)copyAll.addEventListener('click',()=>{const rows=filteredRows('results');copyText(resultCopyText(rows,{gameName:MODE_NAMES[filters.game.value]||'NAKA GAMING',platform:filters.platform.value?platformLabel(filters.platform.value):'',format:'cards'}),rows.length+' resultados filtrados copiados com colocação.');});
   for(const value of Object.values(filters))value.addEventListener(value===filters.search?'input':'change',render);
