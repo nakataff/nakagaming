@@ -29,7 +29,11 @@ function list(container,items,{edit,remove,move,label}) {
   });
 }
 export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onBusy}) {
-  const isTeams=!!$('#team-form'),form=$(isTeams?'#player-form':'#leader-form'),kind=isTeams?'player':'leader';
+  const isTeams=!!$('#team-form'),isOrganization=document.body.dataset.adminPage==='/admin/organizacao/';
+  const leaderKey=isOrganization?'organizationLeaders':'leaders';
+  const isLeaderType=type=>type==='leader'||type==='organization-leader';
+  const leaderType=isOrganization?'organization-leader':'leader';
+  const form=$(isTeams?'#player-form':'#leader-form'),kind=isTeams?'player':'leader';
   let selectedTeam='',undo=null;
   const crop=createPhotoCrop({form,getProfile:()=>readProfile(form),onApply:()=>{markDirty(form,true);preview();feedback('Enquadramento aplicado. Salve o cadastro e publique para atualizar a foto no site.');},feedback,circle:!isTeams});
   form.querySelector('[data-adjust-photo]').addEventListener('click',()=>crop.open());
@@ -55,12 +59,12 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
   async function removeRecord(record,type){
     if(!confirm('Remover '+(record.name||record.nick)+' do rascunho? O site só muda quando você publicar.'))return;
     const previous=structuredClone(getData()),teamId=selectedTeam;
-    const rows=type==='team'?previous.teams:type==='leader'?previous.leaders:previous.teams.find(t=>t.id===teamId).players;
+    const rows=type==='team'?previous.teams:isLeaderType(type)?previous[leaderKey]:previous.teams.find(t=>t.id===teamId).players;
     const removedIndex=rows.findIndex(row=>row.id===record.id);
     try{
       const next=structuredClone(previous);
       if(type==='team')next.teams=next.teams.filter(t=>t.id!==record.id);
-      else if(type==='leader')next.leaders=next.leaders.filter(p=>p.id!==record.id);
+      else if(isLeaderType(type))next[leaderKey]=next[leaderKey].filter(p=>p.id!==record.id);
       else next.teams.find(t=>t.id===selectedTeam).players=next.teams.find(t=>t.id===selectedTeam).players.filter(p=>p.id!==record.id);
       await persist(next,'Cadastro removido do rascunho. Você pode desfazer a última remoção.');
       undo={type,record:structuredClone(record),index:removedIndex,teamId};undoButton.hidden=false;
@@ -72,13 +76,13 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
     }catch(error){feedback(error.message,true);}
   }
   async function moveProfile(index,direction){await changeList(next=>{
-    const rows=isTeams?next.teams.find(t=>t.id===selectedTeam).players:next.leaders;
+    const rows=isTeams?next.teams.find(t=>t.id===selectedTeam).players:next[leaderKey];
     [rows[index],rows[index+direction]]=[rows[index+direction],rows[index]];
   },'Ordem salva no rascunho.');}
   function syncTeamPlatform(reset=false){const f=$('#team-form');if(!f)return;const platform=field(f,'platform'),game=field(f,'game').value;if(game!=='free-fire'){platform.value='geral';platform.disabled=true;}else{platform.disabled=false;if(reset||platform.value==='geral')platform.value='emulador';}}
   function renderProfiles(){
-    const team=currentTeam(),rows=isTeams?(team?.players||[]):getData().leaders;
-    list($(isTeams?'#roster-player-list':'#leader-list'),rows,{label:p=>p.nick,edit:editProfile,remove:p=>removeRecord(p,isTeams?'player':'leader'),move:moveProfile});
+    const team=currentTeam(),rows=isTeams?(team?.players||[]):getData()[leaderKey];
+    list($(isTeams?'#roster-player-list':'#leader-list'),rows,{label:p=>p.nick,edit:editProfile,remove:p=>removeRecord(p,isTeams?'player':leaderType),move:moveProfile});
     if(isTeams)form.querySelector('button[type=submit]').disabled=!team;
     preview();
   }
@@ -109,7 +113,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
     try{
       if(isTeams&&!currentTeam())throw new Error('Cadastre e selecione uma equipe primeiro.');
       const record=readProfile(form),next=structuredClone(getData());
-      const rows=isTeams?next.teams.find(t=>t.id===selectedTeam).players:next.leaders,index=rows.findIndex(p=>p.id===record.id);
+      const rows=isTeams?next.teams.find(t=>t.id===selectedTeam).players:next[leaderKey],index=rows.findIndex(p=>p.id===record.id);
       if(index<0)rows.push(record);else rows[index]=record;
       await persist(next,'Perfil salvo no rascunho. Use Publicar no site para exibi-lo.',form);clearUndo();resetProfile();renderProfiles();
     }catch(error){feedback(error.message,true);}
@@ -119,7 +123,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
   bindUpload(form,'photoFile','photo');
   undoButton.addEventListener('click',async()=>{
     if(!undo)return;try{
-      const next=structuredClone(getData()),rows=undo.type==='team'?next.teams:undo.type==='leader'?next.leaders:next.teams.find(t=>t.id===undo.teamId)?.players;
+      const next=structuredClone(getData()),rows=undo.type==='team'?next.teams:isLeaderType(undo.type)?next[leaderKey]:next.teams.find(t=>t.id===undo.teamId)?.players;
       if(!rows)throw new Error('A equipe foi removida. Restaure a equipe antes do jogador.');
       rows.splice(Math.min(undo.index,rows.length),0,undo.record);
       await persist(next,'Última remoção desfeita.');clearUndo();render();
