@@ -24,7 +24,7 @@
 .comp-table{border-collapse:collapse;width:100%;min-width:680px}
 .comp-table th{font:11px/1.4 var(--body);letter-spacing:.12em;text-transform:uppercase;text-align:left;color:#aebbd9;background:#202743;padding:15px 13px}
 .comp-table td{padding:13px;border-top:1px solid #39425e;color:#e8ecfa;font-size:13px;vertical-align:middle}
-.comp-table tbody tr:nth-child(even){background:#181e34}.comp-table tbody tr:hover{background:#252e4d}
+
 .comp-table td.comp-date{white-space:nowrap;color:#abb9d7;font-variant-numeric:tabular-nums}
 .comp-table td.comp-name{min-width:260px}.comp-name strong{font-weight:600}.comp-name small{display:block;color:#9aa6c5;font-size:11px;margin-top:3px}
 .placement{display:inline-block;background:#1f5961;color:#d6ffff;padding:4px 8px;min-width:65px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
@@ -44,18 +44,18 @@
 @media(max-width:560px){.comp-wrap{padding:23px 0 65px}.comp-mode-nav{gap:7px;margin-bottom:25px}.comp-mode-nav a{font-size:18px;padding:16px 12px}.comp-platform-nav button{flex:1}.comp-section-head{align-items:flex-start;flex-direction:column;gap:6px}.comp-section{padding-bottom:25px}.comp-honor{flex-wrap:wrap}.comp-honor a{margin-left:0;width:100%}.comp-filters label,.comp-filters input{width:100%}.comp-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.comp-filters label:last-child{grid-column:span 2}}
 @media(prefers-reduced-motion:reduce){.comp-hub-card{transition:none}}
 
-/* Exportação textual do histórico de resultados */
-.comp-copy-toolbar{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:0 0 18px;padding:16px;background:#171e35;border:1px solid #394361}
-.comp-copy-toolbar>label:not(.comp-copy-checkbox){font-size:11px;color:#b6c5e5;display:grid;gap:7px}
-.comp-copy-toolbar select{min-height:40px;min-width:170px;background:#252f50;color:#f6f7ff;border:1px solid #576587;padding:8px 10px;font:13px var(--body)}
-.comp-copy-checkbox{display:inline-flex;align-items:center;gap:8px;color:#d8e0f6;font-size:12px;cursor:pointer;min-height:40px}
-.comp-copy-checkbox input{width:16px;height:16px;accent-color:#adbcff;margin:0}
-.comp-copy-button{border:1px solid #b4bfff;background:#b4bfff;color:#111329;padding:11px 16px;font:700 13px var(--body);cursor:pointer;min-height:40px}
-.comp-copy-button:hover{background:#e0e5ff}
-.comp-copy-status{font-size:12px;color:#bacbff;flex:1 1 170px;align-self:center}
-.comp-copy-preview{display:block;width:100%;box-sizing:border-box;min-height:120px;margin:0 0 18px;background:#19213b;color:white;border:1px solid #576587;padding:12px;font:12px/1.55 monospace}
-.comp-copy-preview[hidden]{display:none!important}
+/* Colunas ordenáveis, no padrão de tabelas competitivas. */
+.comp-table th .comp-sort-trigger{display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;border:0;padding:2px 0;background:transparent;color:inherit;text-align:left;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;white-space:nowrap}
+.comp-sort-trigger:hover,.comp-sort-trigger.active{color:#fff}
+.comp-sort-trigger:focus-visible{outline:2px solid #b9c8ff;outline-offset:5px;border-radius:2px}
+.comp-sort-icon{color:#8d9bbd;font-size:15px;font-weight:700;min-width:13px;text-align:center}
+.comp-sort-trigger.active .comp-sort-icon{color:#c4ceff}
+.comp-table tbody tr.comp-year-row{background:#222a44}
+.comp-table tbody tr.comp-year-row:hover{background:#222a44}
+.comp-table tbody tr.comp-year-row th.comp-year-cell{padding:13px 14px;text-align:left;font:700 15px/1.4 var(--body);color:#d7e0fa;letter-spacing:.04em;border-top:2px solid #475675;border-bottom:1px solid #425071}
+.comp-table tbody tr.comp-result-row:nth-child(even){background:#181e34}
+.comp-table tbody tr.comp-result-row:hover{background:#252e4d}
 .placement.is-unknown{background:transparent;color:#aeb6ce;font-size:11px;min-width:100px}
 .placement.is-second{background:#4c6173;color:white}
 .placement.is-third{background:#805337;color:#fff}
-@media(max-width:560px){.comp-copy-toolbar>label:not(.comp-copy-checkbox){flex:1;min-width:100%}.comp-copy-toolbar select{width:100%}.comp-copy-button{flex:1 1 100%}.comp-copy-checkbox{flex:1 1 100%}}
+@media(max-width:560px){.comp-table th .comp-sort-trigger{gap:5px}.comp-table tbody tr.comp-year-row th.comp-year-cell{font-size:14px;padding:10px 12px}}

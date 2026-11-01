@@ -1,7 +1,8 @@
 import {loadSiteConfig} from './site-data.mjs?v=20261101-news';
 import {personCard} from './roster-view.mjs?v=20261101-news';
 import {releaseMedia} from './roster-media.mjs?v=20261101-news';
-import {placementLabel,resultCopyText} from './competition-copy.mjs?v=20261101-copy';
+import {placementLabel} from './competition-copy.mjs?v=20261101-copy';
+import {DEFAULT_RESULTS_SORT,resultDisplayRows,nextResultSort} from './competition-sort.mjs?v=20261101-sort';
 
 const root=document.querySelector('[data-competition-page]');
 const GAME_NAMES={'free-fire':'FREE FIRE',hok:'HONOR OF KINGS',valorant:'VALORANT',cs2:'COUNTER-STRIKE 2'};
@@ -29,8 +30,8 @@ try {
     const game=root.dataset.competitionPage,config=await loadSiteConfig(),platformButtons=[...root.querySelectorAll('[data-platform]')];
     let platform=game==='free-fire'&&new URLSearchParams(location.search).get('plataforma')==='mobile'?'mobile':game==='free-fire'?'emulador':'geral';
     const panel=root.querySelector('#competition-content'),resultsArea=root.querySelector('#results-body'),titlesArea=root.querySelector('#titles-list');
-    const copyFormat=root.querySelector('#result-copy-format'),copyPlacement=root.querySelector('#copy-show-placement'),copyButton=root.querySelector('#copy-results-button'),copyStatus=root.querySelector('#copy-results-status'),copyPreview=root.querySelector('#result-copy-preview');
-    let filteredVisible=[];
+    let sortState={...DEFAULT_RESULTS_SORT};
+    const sortButtons=[...root.querySelectorAll('[data-sort-key]')];
     const years=root.querySelector('#result-year'),tier=root.querySelector('#result-tier'),search=root.querySelector('#result-search');
     const resultsTitle=root.querySelector('#results-count'),titlesCount=root.querySelector('#titles-count');
     const rosterCount=root.querySelector('#roster-count'),rosterArea=root.querySelector('#competition-rosters');
@@ -40,12 +41,28 @@ try {
       const list=current(config.competition.results).sort((a,b)=>b.date.localeCompare(a.date)||a.tournament.localeCompare(b.tournament));
       const selectedYear=years.value,selectedTier=tier.value,query=search.value.trim().toLocaleLowerCase('pt-BR');
       const filtered=list.filter(r=>(!selectedYear||r.date.startsWith(selectedYear))&&(!selectedTier||r.tier===selectedTier)&&(!query||r.tournament.toLocaleLowerCase('pt-BR').includes(query)));
-      filteredVisible=filtered;
       resultsArea.replaceChildren();resultsTitle.textContent=list.length+' participações';
+      for(const button of sortButtons){
+        const selected=button.dataset.sortKey===sortState.key;
+        const column=button.closest('th');
+        if(selected)column.setAttribute('aria-sort',sortState.direction==='asc'?'ascending':'descending');
+        else column.removeAttribute('aria-sort');
+        button.querySelector('.comp-sort-icon').textContent=selected?(sortState.direction==='asc'?'↑':'↓'):'↕';
+        button.classList.toggle('active',selected);
+      }
       emptyResults.hidden=filtered.length>0;
       root.querySelector('#results-table').hidden=!filtered.length;
-      for (const record of filtered) {
-        const tr=document.createElement('tr');
+      for (const item of resultDisplayRows(filtered,sortState)) {
+        if(item.type==='year'){
+          const yearRow=element('tr','comp-year-row');
+          const label=element('th','comp-year-cell',item.year);
+          label.colSpan=5;
+          label.scope='rowgroup';
+          yearRow.append(label);resultsArea.append(yearRow);
+          continue;
+        }
+        const record=item.record;
+        const tr=element('tr','comp-result-row');
         const date=element('td','comp-date',formatDate(record.date));
         const placement=element('td','');
         const pos=placementLabel(record.placement);
@@ -112,26 +129,9 @@ try {
       setFilters();
     }));
     [years,tier,search].forEach(input=>input.addEventListener(input===search?'input':'change',drawResults));
-    copyButton.addEventListener('click',async()=>{
-      const content=resultCopyText(filteredVisible,{gameName:GAME_NAMES[game],platform:game==='free-fire'?platform.toUpperCase():'',format:copyFormat.value,includePlacement:copyPlacement.checked});
-      copyStatus.textContent='';
-      copyPreview.hidden=true;
-      copyPreview.value=content;
-      try {
-        if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(content);
-        else {
-          // Fallback para navegadores que não oferecem a API moderna.
-          copyPreview.hidden=false;
-          copyPreview.focus();copyPreview.select();
-          if(!document.execCommand('copy'))throw new Error('Cópia não autorizada');
-          copyPreview.hidden=true;
-        }
-        copyStatus.textContent='Copiado! '+filteredVisible.length+' resultado(s), respeitando os filtros.';
-      } catch {
-        copyPreview.hidden=false;
-        copyPreview.focus();copyPreview.select();
-        copyStatus.textContent='Não foi possível copiar automaticamente. O texto está selecionado: use Ctrl+C.';
-      }
+    for(const button of sortButtons)button.addEventListener('click',()=>{
+      sortState=nextResultSort(sortState,button.dataset.sortKey);
+      drawResults();
     });
     setFilters();panel.hidden=false;root.querySelector('#competition-loading').hidden=true;
   }
