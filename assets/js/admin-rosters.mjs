@@ -75,6 +75,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
     const rows=isTeams?next.teams.find(t=>t.id===selectedTeam).players:next.leaders;
     [rows[index],rows[index+direction]]=[rows[index+direction],rows[index]];
   },'Ordem salva no rascunho.');}
+  function syncTeamPlatform(reset=false){const f=$('#team-form');if(!f)return;const platform=field(f,'platform'),game=field(f,'game').value;if(game!=='free-fire'){platform.value='geral';platform.disabled=true;}else{platform.disabled=false;if(reset||platform.value==='geral')platform.value='emulador';}}
   function renderProfiles(){
     const team=currentTeam(),rows=isTeams?(team?.players||[]):getData().leaders;
     list($(isTeams?'#roster-player-list':'#leader-list'),rows,{label:p=>p.nick,edit:editProfile,remove:p=>removeRecord(p,isTeams?'player':'leader'),move:moveProfile});
@@ -88,7 +89,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
       if(!teams.length){const option=document.createElement('option');option.value='';option.textContent='Cadastre uma equipe primeiro';select.append(option);}
       for(const team of teams){const option=document.createElement('option');option.value=team.id;option.textContent=team.name;select.append(option);}select.value=selectedTeam;
       list($('#team-list'),teams,{label:t=>t.name,edit:t=>{
-        if(!discard($('#team-form')))return;fill($('#team-form'),t);markDirty($('#team-form'),false);$('#team-form-title').textContent='Editar equipe';
+        if(!discard($('#team-form')))return;fill($('#team-form'),t);syncTeamPlatform();markDirty($('#team-form'),false);$('#team-form-title').textContent='Editar equipe';
       },remove:t=>removeRecord(t,'team'),move:(index,direction)=>changeList(next=>{[next.teams[index],next.teams[index+direction]]=[next.teams[index+direction],next.teams[index]];},'Ordem das equipes salva.')});
     }
     renderProfiles();
@@ -126,7 +127,8 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
   });
   if(isTeams){
     const teamForm=$('#team-form');
-    function resetTeam(){fill(teamForm);field(teamForm,'id').value='';$('#team-form-title').textContent='Nova equipe';markDirty(teamForm,false);}
+    teamForm.addEventListener('change',event=>{if(event.target===field(teamForm,'game'))syncTeamPlatform(true);});
+    function resetTeam(){fill(teamForm);syncTeamPlatform();field(teamForm,'id').value='';$('#team-form-title').textContent='Nova equipe';markDirty(teamForm,false);}
     $('#new-team').addEventListener('click',()=>{if(discard(teamForm))resetTeam();});$('#cancel-team').addEventListener('click',()=>{if(discard(teamForm))resetTeam();});
     $('#roster-team-select').addEventListener('change',event=>{
       if(!discard(form)){event.target.value=selectedTeam;return;}selectedTeam=event.target.value;resetProfile();renderProfiles();
@@ -136,7 +138,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
       event.preventDefault();try{
         const next=structuredClone(getData()),teamId=field(teamForm,'id').value||id(),index=next.teams.findIndex(t=>t.id===teamId);
         const team={id:teamId,players:index<0?[]:next.teams[index].players};
-        for(const key of ['name','category','description','theme','background'])team[key]=field(teamForm,key).value.trim();team.visible=field(teamForm,'visible').checked;
+        for(const key of ['name','category','description','theme','background','game','platform'])team[key]=field(teamForm,key).value.trim();team.visible=field(teamForm,'visible').checked;
         if(index<0)next.teams.push(team);else next.teams[index]=team;
         await persist(next,'Equipe salva. Adicione os jogadores no elenco abaixo.',teamForm);if(!selectedTeam)selectedTeam=teamId;clearUndo();resetTeam();render();
       }catch(error){feedback(error.message,true);}
