@@ -1,5 +1,5 @@
 export const ADMIN_EMAIL = 'admin@centralfreefire.com.br';
-export const ADMIN_PATHS = new Set(['/admin/', '/admin/site/', '/admin/equipes/', '/admin/noticias/', '/admin/guilda/', '/admin/backup/']);
+export const ADMIN_PATHS = new Set(['/admin/', '/admin/site/', '/admin/equipes/', '/admin/competitivo/', '/admin/noticias/', '/admin/guilda/', '/admin/backup/']);
 export function isAdminUser(user) {
   return !!user && typeof user.uid === 'string' && !!user.uid && user.email === ADMIN_EMAIL;
 }
