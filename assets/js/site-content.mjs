@@ -1,4 +1,4 @@
-import {loadSiteConfig} from './site-data.mjs?v=20261101-crop';
+import {loadSiteConfig} from './site-data.mjs?v=20261101-news';
 // O HTML continua completo quando a configuração remota está indisponível.
 try {
   const config=await loadSiteConfig();

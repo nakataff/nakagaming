@@ -1,8 +1,8 @@
-import {validatePhoto,validateInstagram} from './admin-schema.mjs?v=20261101-crop';
-import {releaseMedia} from './roster-media.mjs?v=20261101-crop';
-import {personCard} from './roster-view.mjs?v=20261101-crop';
-import {uploadPhoto} from './admin-media.mjs?v=20261101-crop';
-import {createPhotoCrop} from './admin-photo-crop.mjs?v=20261101-crop';
+import {validatePhoto,validateInstagram} from './admin-schema.mjs?v=20261101-news';
+import {releaseMedia} from './roster-media.mjs?v=20261101-news';
+import {personCard} from './roster-view.mjs?v=20261101-news';
+import {uploadPhoto} from './admin-media.mjs?v=20261101-news';
+import {createPhotoCrop} from './admin-photo-crop.mjs?v=20261101-news';
 const $=s=>document.querySelector(s);
 const id=()=>(typeof crypto.randomUUID==='function'?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),byte=>byte.toString(16).padStart(2,'0')).join(''));
 const field=(form,key)=>form.elements.namedItem(key);

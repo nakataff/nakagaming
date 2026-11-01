@@ -1,10 +1,10 @@
-export async function compressImage(file) {
+export async function compressImage(file,{maxWidth=480,maxHeight=720}={}) {
   if (!['image/png','image/jpeg','image/webp','image/avif'].includes(file.type)) throw new Error('Escolha uma foto PNG, JPG, WebP ou AVIF.');
   if (file.size>12*1024*1024) throw new Error('A imagem original deve ter até 12 MB.');
   const bitmap=await createImageBitmap(file);
   try {
     if (!bitmap.width || !bitmap.height || bitmap.width*bitmap.height>40000000) throw new Error('Escolha uma imagem com até 40 megapixels.');
-    let scale=Math.min(1,480/bitmap.width,720/bitmap.height),blob;
+    let scale=Math.min(1,maxWidth/bitmap.width,maxHeight/bitmap.height),blob;
     const canvas=document.createElement('canvas');
     for (let pass=0;pass<3;pass++) {
       canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));

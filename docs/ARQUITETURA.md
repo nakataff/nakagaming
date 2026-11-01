@@ -58,3 +58,12 @@ Os backups guardam as referências dos uploads, não o binário. Uploads substit
 ## Enquadramento de fotos
 
 `photo-frame.mjs` compartilha a geometria do recorte entre `admin-photo-crop.mjs` e `roster-view.mjs`. Posição X/Y (0–100) e zoom (1–3) geram proporções relativas, mantendo o mesmo recorte no editor e em retratos de outros tamanhos. Perfis anteriores mantêm a posição vertical existente, X central e zoom 1. `photoPositionX` e `photoZoom` são opcionais na entrada e recebem valores padrão na validação. Silhuetas continuam usando seu enquadramento original. O ajuste não altera o arquivo nem faz novo upload.
+
+
+## Notícias independentes
+
+`news-store.mjs` implementa o fluxo de rascunho, publicação e arquivamento, com transporte injetável. `news-cloud.mjs` usa uma atualização atômica nos caminhos `nakaGamingNews/drafts/{id}`, `adminIndex/{id}`, `publicIndex/{id}` e `articles/{id}`. A revisão de cada rascunho deve incrementar exatamente uma vez, recusando sobrescritas de sessões antigas. `liveRevision` informa qual versão está no ar; salvar um rascunho não altera os caminhos públicos. Arquivar apaga apenas as cópias públicas e conserva o rascunho.
+
+Os índices usam `sortKey` composto da data exibida e identificador, com índice no servidor. O frontend público carrega 3 metadados na home e 12 no arquivo, com paginação; o artigo é buscado individualmente. O namespace inteiro e os rascunhos não aceitam leitura anônima. Só a conta administrativa escreve. O índice público tem uma lista fechada de campos, sem corpo do texto. Textos são montados por `textContent`, sem interpretar HTML.
+
+A capa é uma referência única compartilhada entre card e artigo. O conversor permite dimensões maiores para capas e mantém o limite de 75 KB/110.000 caracteres do transporte de mídia existente. Perfis não mudam seus limites. Não há listeners contínuos de notícias. O backup de configuração geral do portal não inclui este namespace independente.

@@ -1,6 +1,6 @@
-import {photoLayout,frameStyles,dragPhoto} from './photo-frame.mjs?v=20261101-crop';
-import {mediaURL} from './roster-media.mjs?v=20261101-crop';
-import {validatePhoto} from './admin-schema.mjs?v=20261101-crop';
+import {photoLayout,frameStyles,dragPhoto} from './photo-frame.mjs?v=20261101-news';
+import {mediaURL} from './roster-media.mjs?v=20261101-news';
+import {validatePhoto} from './admin-schema.mjs?v=20261101-news';
 export function createPhotoCrop({form,getProfile,onApply,feedback,circle=true}) {
   const dialog=document.createElement('dialog');dialog.className='photo-crop-dialog';
   dialog.setAttribute('aria-labelledby','photo-crop-title');

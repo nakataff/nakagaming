@@ -133,3 +133,16 @@ O botão **Ajustar enquadramento** abre uma prévia circular para líderes e 4:5
 ### Instagram da guilda e recrutamento
 
 A organização usa `@nakagamingx`. A guilda usa `@nakateamff`, que também é o canal oficial de recrutamento. O texto da pergunta sobre entrada na guilda e o link são editáveis em Conteúdo e canais. Configurações publicadas antes desse campo recebem o endereço e o texto oficiais como padrão, sem substituir os demais dados.
+
+
+## Notícias
+
+A home exibe as 3 notícias publicadas mais recentes. `/noticias/` mostra o arquivo em lotes de 12, e `/noticias/ler/?id=...` abre cada texto. Os cards usam só título, categoria, data, resumo e capa; o corpo é lido apenas no artigo. O leitor usa REST sem SDK e cache por sessão de 2 minutos.
+
+Em `/admin/noticias/`, escreva título, resumo opcional, categoria, data exibida e texto de até 20.000 caracteres. A capa aceita link ou upload, convertido para WebP de até 1280 × 900 px e 75 KB. A mesma referência de imagem é usada no card e no artigo. As fotos de perfis continuam com os limites anteriores.
+
+**Publicar notícia** coloca apenas aquela matéria no ar, sem precisar de **Publicar no site**. A gravação de rascunho, índice e artigo é atômica e confere a revisão do texto no servidor. **Salvar rascunho** mantém a versão publicada anterior até uma nova publicação. **Arquivar** retira a notícia do público e preserva o texto para editar ou republicar. A data é exibida no site; não há agendamento nesta versão.
+
+Notícias ficam em `nakaGamingNews`, com rascunhos privados, índice administrativo, índice público sem corpo e artigos publicados por identificador. Não fazem parte do backup JSON do portal/guilda. O fragmento `firebase/naka-news.rules.json` foi mesclado às regras do projeto Central, preservando os outros caminhos.
+
+As URLs de artigo usam parâmetros porque o GitHub Pages serve HTML estático. O conteúdo e o título são preenchidos no navegador; robôs de compartilhamento sem JavaScript recebem a imagem e os metadados genéricos da Naka. Não foram criadas notícias fictícias na publicação inicial.

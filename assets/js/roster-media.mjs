@@ -1,4 +1,4 @@
-import {firebaseConfig} from './firebase-config.mjs?v=20261101-crop';
+import {firebaseConfig} from './firebase-config.mjs?v=20261101-news';
 const resolved=new Map();
 export const themeAssets=(theme)=>({
   background:'/assets/images/roster/background-'+(theme==='samurai-fem'?'samurai-fem':'samurai')+'.webp',

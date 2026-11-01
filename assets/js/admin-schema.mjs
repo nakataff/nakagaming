@@ -1,4 +1,5 @@
 export const CONTENT_FIELDS = {
+  newsTitle: ['Título da seção de notícias', 90], newsIntro: ['Apresentação das notícias', 500],
   homeTitle: ['Título principal', 40], homeSubtitle: ['Segunda linha', 30],
   homeHighlight: ['Palavra em destaque', 30], homeDescription: ['Descrição da home', 400],
   aboutIntro: ['Apresentação da Naka', 600], aboutDescription: ['Identidade da Naka', 1500],
@@ -15,7 +16,7 @@ export const LINK_FIELDS = {
 export const ROLES = ['Jogador', 'Liderança', 'Comissão técnica', 'Criador de conteúdo'];
 export const STATUSES = ['Ativo', 'Reserva', 'Saída'];
 const LINK_DEFAULTS={guildInstagram:'https://www.instagram.com/nakateamff/'};
-const CONTENT_DEFAULTS = {guildRecruitment:'O recrutamento da guilda é feito pelo Instagram oficial @nakateamff. Entre em contato por lá para saber os critérios e as vagas disponíveis.',teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.'};
+const CONTENT_DEFAULTS = {newsTitle:'POR DENTRO DA NAKA.',newsIntro:'Resultados, novidades e os projetos que fazem parte da nossa história.',guildRecruitment:'O recrutamento da guilda é feito pelo Instagram oficial @nakateamff. Entre em contato por lá para saber os critérios e as vagas disponíveis.',teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.'};
 const object = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 function text(value, label, limit) {
   if (typeof value !== 'string' || !value.trim() || value.trim().length > limit) {

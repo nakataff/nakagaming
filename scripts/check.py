@@ -7,7 +7,7 @@ import json
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-ROUTES = {'/': 'index.html', '/sobre/': 'sobre/index.html', '/equipes/': 'equipes/index.html', '/guilda/': 'guilda/index.html', '/contato/': 'contato/index.html', '/404.html': '404.html'}
+ROUTES = {'/': 'index.html', '/noticias/': 'noticias/index.html', '/noticias/ler/': 'noticias/ler/index.html', '/sobre/': 'sobre/index.html', '/equipes/': 'equipes/index.html', '/guilda/': 'guilda/index.html', '/contato/': 'contato/index.html', '/404.html': '404.html'}
 ALIASES = {'sobre.html': '/sobre/', 'guilda.html': '/guilda/', 'contato.html': '/contato/'}
 SOCIALS = set(json.loads((ROOT / 'assets/data/site.json').read_text())['links'].values())
 BASE = 'https://nakagaming.com.br'
@@ -53,7 +53,7 @@ for old, target in ALIASES.items():
 css = ROOT / 'assets/css/styles.css'
 for ref in re.findall(r'url\([\'\"]?(.*?)[\'\"]?\)', css.read_text()):
     assert (css.parent / ref).is_file(), f'CSS: recurso ausente: {ref}'
-ADMIN_ROUTES = {'/admin/': 'admin/index.html', '/admin/site/': 'admin/site/index.html', '/admin/equipes/': 'admin/equipes/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/backup/': 'admin/backup/index.html', '/admin/login/': 'admin/login/index.html'}
+ADMIN_ROUTES = {'/admin/': 'admin/index.html', '/admin/noticias/': 'admin/noticias/index.html', '/admin/site/': 'admin/site/index.html', '/admin/equipes/': 'admin/equipes/index.html', '/admin/guilda/': 'admin/guilda/index.html', '/admin/backup/': 'admin/backup/index.html', '/admin/login/': 'admin/login/index.html'}
 for route, name in ADMIN_ROUTES.items():
     page = Page((ROOT / name).read_text())
     assert sum(t == 'h1' for t, a in page.tags) == 1
@@ -68,5 +68,5 @@ for route, name in ADMIN_ROUTES.items():
 assert 'Disallow: /admin/' in (ROOT / 'robots.txt').read_text()
 assert (ROOT / 'CNAME').read_text().strip() == 'nakagaming.com.br'
 ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
-assert {e.text for e in ET.parse(ROOT / 'sitemap.xml').findall('s:url/s:loc', ns)} == {BASE + route for route in ROUTES if route != '/404.html'}
+assert {e.text for e in ET.parse(ROOT / 'sitemap.xml').findall('s:url/s:loc', ns)} == {BASE + route for route in ROUTES if route not in ('/404.html','/noticias/ler/')}
 print(f'OK: {len(pages)} páginas, {len(ALIASES)} redirecionamentos, rotas, canais, imagens, fontes e sitemap')
