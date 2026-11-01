@@ -19,6 +19,29 @@
 .news-excerpt {font-size:13px;color:#a9b3cd;line-height:1.7;margin-bottom:16px}
 .news-read {font-size:11px;color:var(--blue)}
 .news-status {color:#9da9ca;font-size:14px;margin-top:28px}
+.news-status:empty {display:none}
+.news-home-layout {display:grid;grid-template-columns:minmax(0,1fr)}
+.news-home-layout.has-recent {grid-template-columns:minmax(0,1fr) 270px;gap:35px}
+.news-highlights {min-width:0}
+.news-home .news-grid {gap:20px;position:relative}
+.news-home .news-card h3 {font-size:29px}
+.news-home .news-meta {flex-wrap:wrap;gap:5px 10px}
+.news-home .news-excerpt {display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.news-recent {border-left:1px solid var(--line);padding-left:28px}
+.news-recent>h3 {font-size:10px;font-family:var(--body);font-weight:400;text-transform:uppercase;letter-spacing:.16em;color:#a9b5d5;margin:0 0 20px}
+.news-recent-list {list-style:none;padding:0;margin:0}
+.news-recent-list li+li {border-top:1px solid var(--line)}
+.news-recent-link {display:block;padding:17px 0}
+.news-recent-list li:first-child .news-recent-link {padding-top:0}
+.news-recent-link h4 {font:700 24px/1.15 var(--display);margin:9px 0 0;overflow-wrap:anywhere}
+.news-home-footer {display:flex;justify-content:center;margin-top:38px}
+.news-all-link {display:inline-flex;align-items:center;justify-content:center;gap:35px;padding:16px 25px;border:1px solid #67769d;font-size:12px;color:#e0e6fa;transition:background .2s}
+.news-dots {display:flex;justify-content:center;gap:3px;margin-top:12px}
+.news-dot {display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;color:#e0e6fa}
+.news-dot:after {content:'';width:7px;height:7px;border:1px solid #8997bd;border-radius:50%;transition:background .15s,transform .15s}
+.news-dot[aria-pressed=true]:after {background:#d6def9;border-color:#d6def9;transform:scale(1.3)}
+.news-dot:focus-visible,.news-all-link:focus-visible,.news-recent-link:focus-visible {outline:2px solid #d6def9;outline-offset:4px}
+.news-home [data-news-grid]:focus-visible {outline:1px solid #a9b5d5;outline-offset:5px}
 .news-archive-hero {padding:80px 0 48px;border-bottom:1px solid var(--line)}
 .news-archive-hero h1 {font-size:clamp(60px,7vw,100px);margin-bottom:25px}
 .news-archive {padding:55px 0 95px;min-height:350px}
@@ -50,9 +73,20 @@
 .news-admin-status {font-size:11px;color:#7c8bae}
 .news-admin-help {color:#667797;font-size:12px}
 @media(hover:hover){.news-card-link:hover .news-card-visual img {transform:scale(1.025)}.news-card-link:hover .news-read {text-decoration:underline;text-underline-offset:4px}}
+@media(hover:hover){.news-recent-link:hover h4 {color:#b8c7f6}.news-all-link:hover {background:#232d4a}}
 @media(max-width:1100px){.news-grid {gap:28px 18px}.news-card h3 {font-size:29px}.news-editor-layout {grid-template-columns:1fr}.news-editor-preview {position:static}.news-editor-preview .news-card {max-width:420px}}
+@media(min-width:761px) and (max-width:1100px){.news-home-layout.has-recent {grid-template-columns:minmax(0,1fr) 210px;gap:24px}.news-home .news-grid {gap:14px}.news-home .news-card h3 {font-size:25px}.news-recent {padding-left:20px}.news-recent-link h4 {font-size:22px}}
 @media(max-width:760px){
  .news-home {padding:60px 0}.news-section-heading {align-items:flex-start;flex-direction:column;gap:22px}.news-section-heading h2 {font-size:43px}.news-grid {grid-template-columns:1fr;gap:35px}.news-card h3 {font-size:33px}.news-card-visual {aspect-ratio:16/10}.news-section-heading>a {font-size:12px}
+ .news-home-layout.has-recent {grid-template-columns:minmax(0,1fr);gap:24px}
+ .news-home .news-grid {display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:100%;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+ .news-home .news-grid::-webkit-scrollbar {display:none}
+ .news-home .news-card {scroll-snap-align:start;scroll-snap-stop:always}
+ .news-home .news-card h3 {font-size:33px}
+ .news-home .news-card-link {height:auto}
+ .news-home .news-recent {border-left:0;border-top:1px solid var(--line);padding:26px 0 0}
+ .news-home .news-recent-link h4 {font-size:27px}
+ .news-home-footer {margin-top:28px}.news-all-link {width:100%}
  .news-archive-hero {padding:55px 0 35px}.news-archive-hero h1 {font-size:57px}.news-archive {padding:35px 0 65px}
  .news-article-section {padding:35px 0 60px}.news-reader {width:calc(100% - 40px)}.article-heading h1 {font-size:45px}.article-excerpt {font-size:17px}.article-cover {margin:28px 0}.article-body {font-size:16px;line-height:1.85}
 }

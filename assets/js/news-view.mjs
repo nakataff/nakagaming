@@ -12,3 +12,9 @@ export function newsCard(article){
  link.append(visual,info);card.append(link);return card;
 }
 export function articleParagraphs(container,text){container.replaceChildren();for(const part of text.split(/\n\s*\n/).filter(p=>p.trim()))container.append(make('p','',part.trim()));}
+export function newsTextItem(article){
+ const item=make('li'),link=make('a','news-recent-link');link.href=articleURL(article.id);
+ const meta=make('div','news-meta'),date=make('time','',formatNewsDate(article.date));date.dateTime=article.date;
+ meta.append(make('span','news-category',article.category),date);
+ link.append(meta,make('h4','',article.title));item.append(link);return item;
+}

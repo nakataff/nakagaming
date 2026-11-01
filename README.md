@@ -137,7 +137,7 @@ A organização usa `@nakagamingx`. A guilda usa `@nakateamff`, que também é o
 
 ## Notícias
 
-A home exibe as 3 notícias publicadas mais recentes. `/noticias/` mostra o arquivo em lotes de 12, e `/noticias/ler/?id=...` abre cada texto. Os cards usam só título, categoria, data, resumo e capa; o corpo é lido apenas no artigo. O leitor usa REST sem SDK e cache por sessão de 2 minutos.
+A home exibe as 3 notícias publicadas mais recentes com capa e as 5 seguintes em uma lista de texto à direita. No celular, os destaques viram um carrossel com bolinhas (ou deslize), e a lista aparece abaixo, sem repetir notícias. O botão Todas as notícias fica ao final da seção. `/noticias/` mostra o arquivo em lotes de 12, e `/noticias/ler/?id=...` abre cada texto. Os cards usam só título, categoria, data, resumo e capa; o corpo é lido apenas no artigo. O leitor usa REST sem SDK e cache por sessão de 2 minutos.
 
 Em `/admin/noticias/`, escreva título, resumo opcional, categoria, data exibida e texto de até 20.000 caracteres. A capa aceita link ou upload, convertido para WebP de até 1280 × 900 px e 75 KB. A mesma referência de imagem é usada no card e no artigo. As fotos de perfis continuam com os limites anteriores.
 

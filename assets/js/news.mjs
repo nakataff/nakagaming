@@ -1,5 +1,6 @@
 import {loadNewsPage,loadNewsArticle} from './news-data.mjs?v=20261101-news';
-import {newsCard,articleParagraphs} from './news-view.mjs?v=20261101-news';
+import {newsCard,newsTextItem,articleParagraphs} from './news-view.mjs?v=20261101-news-home';
+import {mountNewsCarousel} from './news-carousel.mjs?v=20261101-news-home';
 import {formatNewsDate,articleURL} from './news-schema.mjs?v=20261101-news';
 import {setMedia} from './roster-media.mjs?v=20261101-news';
 const grid=document.querySelector('[data-news-grid]');
@@ -8,7 +9,15 @@ if(grid){
  async function load(){
   if(busy)return;busy=true;if(more)more.disabled=true;
   try{
-   const page=await loadNewsPage({limit:home?3:12,cursor});for(const article of page.items)grid.append(newsCard(article));cursor=page.cursor;
+   const page=await loadNewsPage({limit:home?8:12,cursor});
+   for(const article of (home?page.items.slice(0,3):page.items))grid.append(newsCard(article));cursor=page.cursor;
+   if(home){
+    const recent=document.querySelector('#news-recent'),list=document.querySelector('#news-recent-list');
+    for(const article of page.items.slice(3,8))list.append(newsTextItem(article));
+    recent.hidden=!list.children.length;
+    grid.closest('.news-home-layout').classList.toggle('has-recent',!recent.hidden);
+    mountNewsCarousel(grid,document.querySelector('#news-dots'));
+   }
    status.textContent=grid.children.length?'':'As próximas histórias da Naka chegam por aqui.';
    if(more){more.hidden=!cursor;more.textContent='Carregar mais notícias';}
   }catch{status.textContent='Não foi possível carregar as notícias agora.';if(more){more.hidden=false;more.textContent='Tentar novamente';}}

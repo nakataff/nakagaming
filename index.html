@@ -21,8 +21,8 @@
 <script src="/assets/js/main.js" defer>
 </script>
 <script type="module" src="/assets/js/site-content.mjs?v=20261101-news"></script>
-<link rel="stylesheet" href="/assets/css/news.css?v=20261101-news">
-<script type="module" src="/assets/js/news.mjs?v=20261101-news"></script>
+<link rel="stylesheet" href="/assets/css/news.css?v=20261101-news-home">
+<script type="module" src="/assets/js/news.mjs?v=20261101-news-home"></script>
 </head>
 <body id="topo">
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -84,7 +84,24 @@
 </a>
 </div>
 </section>
-<section class="news-home" id="noticias"><div class="container"><div class="news-section-heading"><div><p class="eyebrow">NOTÍCIAS / ORGANIZAÇÃO</p><h2 data-site-content="newsTitle">POR DENTRO DA NAKA.</h2></div><a href="/noticias/">Todas as notícias ↗</a></div><p class="news-intro" data-site-content="newsIntro">Resultados, novidades e os projetos que fazem parte da nossa história.</p><div class="news-grid" data-news-grid="home"></div><p class="news-status" id="news-status" role="status" aria-live="polite">Carregando notícias…</p><noscript><p>Ative o JavaScript para ler as notícias atualizadas.</p></noscript></div></section>
+<section class="news-home" id="noticias">
+<div class="container">
+<div class="news-section-heading"><div><p class="eyebrow">NOTÍCIAS / ORGANIZAÇÃO</p><h2 data-site-content="newsTitle">POR DENTRO DA NAKA.</h2></div></div>
+<p class="news-intro" data-site-content="newsIntro">Resultados, novidades e os projetos que fazem parte da nossa história.</p>
+<div class="news-home-layout">
+<div class="news-highlights">
+<div class="news-grid" data-news-grid="home" role="region" aria-label="Notícias em destaque"></div>
+<div class="news-dots" id="news-dots" role="group" aria-label="Escolher notícia em destaque" hidden></div>
+</div>
+<aside class="news-recent" id="news-recent" aria-labelledby="news-recent-title" hidden>
+<h3 id="news-recent-title">Mais notícias</h3><ol class="news-recent-list" id="news-recent-list"></ol>
+</aside>
+</div>
+<p class="news-status" id="news-status" role="status" aria-live="polite">Carregando notícias…</p>
+<noscript><p>Ative o JavaScript para ler as notícias atualizadas.</p></noscript>
+<div class="news-home-footer"><a class="news-all-link" href="/noticias/">Todas as notícias <span aria-hidden="true">↗</span></a></div>
+</div>
+</section>
 <section class="intro section-light" id="nosso-caminho">
 <div class="container">
 <div class="section-heading">
