@@ -22,7 +22,7 @@
 </script>
 <script type="module" src="/assets/js/site-content.mjs?v=20261101-news"></script>
 <link rel="stylesheet" href="/assets/css/roster.css?v=20261101-news"><link rel="stylesheet" href="/assets/css/competition.css?v=20261101-comp">
-<script type="module" src="/assets/js/competition-pages.mjs?v=20261101-comp"></script>
+<script type="module" src="/assets/js/competition-pages.mjs?v=20261101-copy"></script>
 </head>
 <body id="topo">
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -62,6 +62,15 @@
 <section id="elencos" class="comp-section" aria-labelledby="elencos-h"><div class="comp-section-head"><h2 id="elencos-h">EQUIPES E ELENCO</h2><span id="roster-count">—</span></div><div id="competition-rosters"></div></section>
 <section id="resultados" class="comp-section" aria-labelledby="resultados-h"><div class="comp-section-head"><h2 id="resultados-h">HISTÓRICO DE RESULTADOS</h2><span id="results-count">—</span></div>
 <div class="comp-filters" id="result-filters"><label>Ano<select id="result-year"><option value="">Todos os anos</option></select></label><label>Nível<select id="result-tier"><option value="">Todos os níveis</option></select></label><label>Pesquisar torneio<input id="result-search" type="search" placeholder="Ex.: GWL, CPN, Copa…"></label></div>
+<div class="comp-copy-toolbar" aria-label="Copiar os resultados da tabela">
+  <label>Formato de cópia
+    <select id="result-copy-format"><option value="cards">Igual aos cards</option><option value="complete">Completo</option><option value="compact">Compacto</option><option value="list">Só torneios</option></select>
+  </label>
+  <label class="comp-copy-checkbox"><input type="checkbox" id="copy-show-placement" checked> Mostrar colocação</label>
+  <button id="copy-results-button" type="button" class="comp-copy-button">Copiar resultados filtrados</button>
+  <span id="copy-results-status" class="comp-copy-status" role="status" aria-live="polite"></span>
+</div>
+<textarea id="result-copy-preview" class="comp-copy-preview" readonly hidden aria-label="Texto dos resultados para copiar manualmente"></textarea>
 <div class="comp-table-wrap"><table class="comp-table" id="results-table"><thead><tr><th scope="col">Data</th><th scope="col">Colocação</th><th scope="col">Tier</th><th scope="col">Torneio</th><th scope="col">Liquipedia</th></tr></thead><tbody id="results-body"></tbody></table></div>
 <p id="results-empty" class="comp-empty" hidden>Não há resultados registrados para este filtro ou plataforma.</p>
 <p class="comp-source-note">Datas e colocações registradas no histórico da organização. Links diretos abrem torneios identificados; os demais abrem uma busca na Liquipedia.</p></section>
