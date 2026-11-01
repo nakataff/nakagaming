@@ -142,6 +142,7 @@ function gameId(value='free-fire') {
 }
 function platformId(value,game='free-fire') {
   const platform=value ?? (game==='free-fire'?'emulador':'geral');
+  if (game==='free-fire' && platform==='geral') throw new Error('Escolha Emulador ou Mobile para Free Fire.');
   if (game!=='free-fire' && platform!=='geral') throw new Error('A plataforma é exclusiva do Free Fire.');
   if (!COMPETITIVE_PLATFORMS.includes(platform)) throw new Error('Plataforma inválida.');
   return platform;
