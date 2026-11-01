@@ -15,7 +15,8 @@ jobs:
       - name: Verificar páginas e arquivos
         run: python3 scripts/check.py
       - name: Verificar JavaScript
-        run: node --check assets/js/main.js
+        run: |
+          for script in assets/js/*.js assets/js/*.mjs; do node --check "$script"; done
       - name: Verificar editor e backups
         run: node --test tests/*.test.mjs
       - name: Verificar pacote público

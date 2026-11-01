@@ -1,6 +1,7 @@
 import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-news';
 import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-news';
 import {mountRosters} from './admin-rosters.mjs?v=20261101-news';
+import {mountCompetition} from './admin-competition.mjs?v=20261101-comp';
 import {clearPublishedCache} from './site-data.mjs?v=20261101-news';
 import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-news';
 import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-news';
@@ -254,6 +255,7 @@ try {
   if (path === '/admin/site/') setupSite();
   if (path === '/admin/guilda/') setupGuild();
   if (path === '/admin/equipes/' || path === '/admin/guilda/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
+  if (path === '/admin/competitivo/') mountCompetition({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form)});
   if (path === '/admin/noticias/') {
     const [{mountNews},{newsRepository}]=await Promise.all([import('./admin-news.mjs?v=20261101-news'),import('./news-cloud.mjs?v=20261101-news')]);
     await mountNews({repository:newsRepository,feedback,onBusy,markDirty,isFormDirty:form=>dirtyForms.has(form)});

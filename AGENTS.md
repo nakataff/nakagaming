@@ -24,3 +24,11 @@
 - Carregue fotos sob demanda e renderize apenas o elenco da aba ativa. Evite frameworks e dependências para funções simples.
 - As regras de dados do projeto Central devem ser preservadas. Mescle somente os caminhos Naka; nunca substitua o banco inteiro pelo fragmento em `firebase/`.
 - Verifique `node --test tests/*.test.mjs`, `python3 scripts/check.py` e `python3 scripts/build.py`. Confira a página de equipes, os líderes, mobile e o estado sem cadastros. Não inclua fixtures locais na publicação.
+
+## Modalidades e resultados
+
+- Páginas de modalidade ficam em `/equipes/free-fire/`, `/equipes/hok/`, `/equipes/valorant/` e `/equipes/cs2/`. Free Fire separa Emulador de Mobile via aba na mesma página.
+- Elencos usam o cadastro de equipes original (agora com modalidade e plataforma). Resultados e títulos são editados em `/admin/competitivo/`, dentro da mesma publicação existente.
+- O histórico inicial contém 30 participações fornecidas pelo administrador, sem inferir colocações ausentes. Títulos só entram após confirmação; vice-campeonato não deve ser contado como título.
+- Links específicos da Liquipedia devem ser verificados; quando indisponíveis, ofereça busca claramente identificada, sem inventar uma URL de torneio.
+- Mantenha compatibilidade de rascunhos anteriores: `competition` ausente recebe o histórico inicial; `competition.results: []` explícito significa vazio. O snapshot público deve filtrar registros ocultos.
