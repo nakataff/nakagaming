@@ -3,7 +3,9 @@ export const CONTENT_FIELDS = {
   homeHighlight: ['Palavra em destaque', 30], homeDescription: ['Descrição da home', 400],
   aboutIntro: ['Apresentação da Naka', 600], aboutDescription: ['Identidade da Naka', 1500],
   aboutMission: ['Propósito da Naka', 1500], guildIntro: ['Apresentação da guilda', 800],
-  contactIntro: ['Introdução do contato', 400], footerTagline: ['Frase do rodapé', 200]
+  contactIntro: ['Introdução do contato', 400], footerTagline: ['Frase do rodapé', 200],
+  teamsTitle: ['Título de equipes', 70], teamsIntro: ['Apresentação das equipes', 600],
+  leadersTitle: ['Título da liderança', 70], leadersIntro: ['Apresentação da liderança', 600]
 };
 export const LINK_FIELDS = {
   nakaInstagram: 'Instagram da Naka', personalInstagram: 'Instagram do Nakata',
@@ -11,6 +13,7 @@ export const LINK_FIELDS = {
 };
 export const ROLES = ['Jogador', 'Liderança', 'Comissão técnica', 'Criador de conteúdo'];
 export const STATUSES = ['Ativo', 'Reserva', 'Saída'];
+const CONTENT_DEFAULTS = {teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.'};
 const object = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 function text(value, label, limit) {
   if (typeof value !== 'string' || !value.trim() || value.trim().length > limit) {
@@ -23,7 +26,7 @@ export function validatePublic(input) {
     throw new Error('Arquivo incompatível. Use uma configuração exportada pelo painel Naka.');
   }
   const content = {}, links = {};
-  for (const [key, [label, limit]] of Object.entries(CONTENT_FIELDS)) content[key] = text(input.content[key], label, limit);
+  for (const [key, [label, limit]] of Object.entries(CONTENT_FIELDS)) content[key] = text(input.content[key] ?? CONTENT_DEFAULTS[key], label, limit);
   for (const [key, label] of Object.entries(LINK_FIELDS)) {
     const raw = text(input.links[key], label, 400);
     let url;
@@ -34,7 +37,7 @@ export function validatePublic(input) {
     }
     links[key] = url.href;
   }
-  return { schemaVersion: 1, content, links };
+  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []) };
 }
 export function validateBackup(input) {
   const config = validatePublic(input);
@@ -49,4 +52,74 @@ export function validateBackup(input) {
     return {id, nick, role:m.role, status:m.status};
   });
   return {...config, members};
+}
+
+
+export const THEMES = ['samurai', 'samurai-fem'];
+function optionalText(value, label, limit) {
+  return value === undefined || value === '' ? '' : text(value,label,limit);
+}
+function identity(value, label) {
+  const id = text(value,label,80);
+  if (!/^[a-zA-Z0-9_-]+$/.test(id)) throw new Error(label + ': identificador inválido.');
+  return id;
+}
+export function validatePhoto(value = '') {
+  if (!value) return '';
+  const raw = text(value,'Imagem',700);
+  if (/^media:[a-zA-Z0-9_-]{10,80}$/.test(raw)) return raw;
+  if (/^\/(assets\/images\/|naka%20gaming\/|naka gaming\/)/.test(raw) && !raw.includes('..') && !/[<>\\]/.test(raw)) return raw.replaceAll(' ','%20');
+  let url;
+  try { url = new URL(raw); } catch { throw new Error('Imagem: use um arquivo do site ou um endereço HTTPS.'); }
+  if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Imagem: use um endereço HTTPS sem credenciais.');
+  return url.href;
+}
+export function validateInstagram(value = '') {
+  if (!value) return '';
+  let raw = text(value,'Instagram',400);
+  if (/^@?[a-zA-Z0-9_.]{1,30}$/.test(raw)) raw='https://www.instagram.com/'+raw.replace(/^@/,'')+'/';
+  let url; try {url=new URL(raw);} catch {throw new Error('Informe um perfil válido do Instagram.');}
+  if (url.protocol !== 'https:' || url.username || url.password || !['instagram.com','www.instagram.com'].includes(url.hostname) || !/^\/[a-zA-Z0-9_.]{1,30}\/?$/.test(url.pathname)) throw new Error('Informe um perfil válido do Instagram.');
+  return 'https://www.instagram.com/'+url.pathname.split('/').filter(Boolean)[0]+'/';
+}
+function visible(value) {
+  if (value === undefined) return true;
+  if (typeof value !== 'boolean') throw new Error('Visibilidade inválida.');
+  return value;
+}
+function theme(value='samurai') {
+  if (!THEMES.includes(value)) throw new Error('Escolha um tema samurai válido.');
+  return value;
+}
+function person(raw, leader=false) {
+  if (!object(raw)) throw new Error('Perfil inválido.');
+  const ffId=optionalText(raw.ffId,'ID do Free Fire',16);
+  if (ffId && !/^[0-9]{5,16}$/.test(ffId)) throw new Error('ID do Free Fire: use de 5 a 16 números.');
+  const photoFit=raw.photoFit ?? (leader ? 'cover' : 'contain');
+  if (!['contain','cover'].includes(photoFit)) throw new Error('Enquadramento inválido.');
+  const photoPosition=raw.photoPosition ?? 50;
+  if (!Number.isFinite(photoPosition) || photoPosition<0 || photoPosition>100) throw new Error('Posição da foto inválida.');
+  return {id:identity(raw.id,'Perfil'), nick:text(raw.nick,'Nick',40), name:optionalText(raw.name,'Nome',70), role:optionalText(raw.role,'Função',50) || (leader?'Liderança':'Jogador'), ffId, instagram:validateInstagram(raw.instagram), photo:validatePhoto(raw.photo), theme:(!leader && (raw.theme === undefined || raw.theme === 'inherit')) ? 'inherit' : theme(raw.theme), photoFit, photoPosition, visible:visible(raw.visible)};
+}
+function unique(list,label) {
+  const ids=new Set();
+  for (const item of list) {if (ids.has(item.id)) throw new Error(label+': identificadores duplicados.'); ids.add(item.id);}
+  return list;
+}
+export function validateTeams(input) {
+  if (!Array.isArray(input) || input.length>12) throw new Error('Cadastre até 12 equipes.');
+  return unique(input.map(raw=>{
+    if (!object(raw) || !Array.isArray(raw.players) || raw.players.length>20) throw new Error('Equipe inválida ou com mais de 20 jogadores.');
+    return {id:identity(raw.id,'Equipe'), name:text(raw.name,'Nome da equipe',60), category:optionalText(raw.category,'Categoria',60), description:optionalText(raw.description,'Descrição',600), theme:theme(raw.theme), background:validatePhoto(raw.background), visible:visible(raw.visible), players:unique(raw.players.map(p=>person(p)),'Jogadores')};
+  }),'Equipes');
+}
+export function validateLeaders(input) {
+  if (!Array.isArray(input) || input.length>20) throw new Error('Cadastre até 20 líderes.');
+  return unique(input.map(p=>person(p,true)),'Líderes');
+}
+export function publicSnapshot(input) {
+  const config=validatePublic(input);
+  config.teams=config.teams.filter(t=>t.visible).map(t=>({...t,players:t.players.filter(p=>p.visible)}));
+  config.leaders=config.leaders.filter(p=>p.visible);
+  return config;
 }

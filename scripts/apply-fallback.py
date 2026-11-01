@@ -4,7 +4,7 @@ import json, sys, re, html
 from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 config = json.load(sys.stdin)
-files = ['index.html', 'sobre/index.html', 'guilda/index.html', 'contato/index.html', '404.html']
+files = ['index.html', 'sobre/index.html', 'equipes/index.html', 'guilda/index.html', 'contato/index.html', '404.html']
 updates = {}
 for name in files:
     path = ROOT / name

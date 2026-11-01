@@ -1,5 +1,5 @@
-import {validateBackup} from './admin-schema.mjs';
-import {assertAdmin} from './admin-auth-policy.mjs';
+import {validateBackup} from './admin-schema.mjs?v=20261101-rosters';
+import {assertAdmin} from './admin-auth-policy.mjs?v=20261101-rosters';
 
 // Transporte injetável: a interface só recebe dados depois da leitura autorizada.
 export function createDraftRepository({getUser, read, transact, loadBase, timestamp}) {

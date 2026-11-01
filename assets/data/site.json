@@ -10,12 +10,18 @@
     "aboutMission": "Nosso símbolo é o ponto de encontro entre a organização e a comunidade. Mais do que um nome na partida, uma bandeira compartilhada.",
     "guildIntro": "Um espaço para quem compartilha a paixão pelo Free Fire e o orgulho de representar a Naka Gaming.",
     "contactIntro": "Acompanhe a organização e fale com a gente pelo Instagram.",
-    "footerTagline": "O mesmo símbolo.\nO mesmo propósito."
+    "footerTagline": "O mesmo símbolo.\nO mesmo propósito.",
+    "teamsTitle": "QUEM CARREGA A BANDEIRA.",
+    "teamsIntro": "Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.",
+    "leadersTitle": "QUEM CONSTRÓI COM A GUILDA.",
+    "leadersIntro": "Conheça as pessoas que organizam e representam a nossa comunidade."
   },
   "links": {
     "nakaInstagram": "https://www.instagram.com/nakagamingx/",
     "personalInstagram": "https://www.instagram.com/nakataff/",
     "centralInstagram": "https://www.instagram.com/centralfreefire_/",
     "centralSite": "https://centralfreefire.com.br/"
-  }
+  },
+  "teams": [],
+  "leaders": []
 }

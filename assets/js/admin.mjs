@@ -1,7 +1,9 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup} from './admin-schema.mjs';
-import {repository} from './admin-cloud.mjs';
-import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs';
-import {isAdminUser} from './admin-auth-policy.mjs';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-rosters';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-rosters';
+import {mountRosters} from './admin-rosters.mjs?v=20261101-rosters';
+import {clearPublishedCache} from './site-data.mjs?v=20261101-rosters';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-rosters';
+import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-rosters';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
@@ -9,6 +11,19 @@ if (window.location.pathname.endsWith('/index.html')) {
 
 const $ = (selector) => document.querySelector(selector);
 let data, savedAt, revision, dirty = false, removedMember = null, pendingImport = null, saving = false;
+const dirtyForms=new Set();
+let uploads=0;
+function markDirty(form,value=true) {
+  if(value)dirtyForms.add(form);else dirtyForms.delete(form);
+  dirty=dirtyForms.size>0;
+  if(dirty)$('#save-state').textContent='Alterações não salvas';else showSaved();
+}
+document.addEventListener('input',event=>{const form=event.target.closest('form');if(form)markDirty(form);});
+function onBusy(delta) {
+  uploads+=delta;
+  $('#admin-content').inert=uploads>0||saving;
+  $('#publish-site').disabled=uploads>0||saving;
+}
 function feedback(message, error = false) {
   const box = $('#feedback');
   box.textContent = message;
@@ -16,12 +31,13 @@ function feedback(message, error = false) {
   box.hidden = false;
 }
 function showSaved() {
-  $('#save-state').textContent = savedAt
+  $('#save-state').textContent = dirty ? 'Alterações não salvas' : savedAt
     ? 'Salvo ' + new Intl.DateTimeFormat('pt-BR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}).format(new Date(savedAt))
     : 'Rascunho inicial';
 }
-async function persist(next, message) {
-  if (saving) throw new Error('Aguarde o salvamento em andamento.');
+async function persist(next, message, sourceForm=null) {
+  if (saving || uploads) throw new Error('Aguarde o salvamento ou envio em andamento.');
+  const form=sourceForm || document.activeElement?.closest('form');
   saving = true;
   $('#admin-content').inert = true;
   $('#save-state').textContent = 'Salvando na conta…';
@@ -33,7 +49,8 @@ async function persist(next, message) {
     if (!document.body.classList.contains('auth-pending')) $('#admin-content').inert = false;
   }
   data = result.data; savedAt = result.savedAt; revision = result.revision;
-  dirty = false;
+  if(form)dirtyForms.delete(form);
+  dirty=dirtyForms.size>0;
   showSaved();
   feedback(message);
 }
@@ -61,7 +78,7 @@ function setupSite() {
     for (const key of Object.keys(CONTENT_FIELDS)) content[key] = form.elements.namedItem(key).value;
     for (const key of Object.keys(LINK_FIELDS)) links[key] = form.elements.namedItem(key).value;
     try {
-      await persist({...data, ...validatePublic({schemaVersion:1, content, links})}, 'Rascunho salvo na sua conta. Exporte a configuração para publicar.');
+      await persist({...data, ...validatePublic({...data,content,links})}, 'Rascunho salvo na sua conta. Use Publicar no site para colocar as alterações no ar.',form);
       preview();
     } catch (error) { feedback(error.message, true); }
   });
@@ -76,7 +93,7 @@ function resetMemberForm() {
   $('#member-form').elements.namedItem('memberId').value = '';
   $('#member-form-title').textContent = 'Adicionar membro';
   $('#cancel-edit').hidden = true;
-  dirty = false;
+  markDirty($('#member-form'),false);
   showSaved();
 }
 function renderMembers() {
@@ -165,8 +182,8 @@ function setupBackup() {
     feedback('Download do backup solicitado. Guarde uma cópia fora deste navegador.');
   });
   $('#export-public').addEventListener('click', () => {
-    download('naka-site.json', validatePublic(data));
-    feedback('Download da configuração solicitado. Esse arquivo contém somente textos e canais públicos.');
+    download('naka-site.json', publicSnapshot(data));
+    feedback('Download da configuração solicitado. Inclui textos, canais, equipes e líderes públicos; a lista privada de membros fica fora.');
   });
   $('#import-file').addEventListener('change', async (event) => {
     pendingImport = null; $('#import-review').hidden = true;
@@ -194,9 +211,23 @@ function setupBackup() {
   });
 }
 $('#admin-logout').addEventListener('click', async () => {
-  if (saving) { feedback('Aguarde o salvamento antes de sair.', true); return; }
+  if (saving || uploads) { feedback('Aguarde o salvamento ou envio antes de sair.', true); return; }
+  if (dirty && !confirm('Sair sem salvar as alterações nos formulários?'))return;
   try { await logout(); dirty = false; goToLogin(); }
   catch { feedback('Não foi possível encerrar a sessão. Tente novamente.', true); }
+});
+$('#publish-site').addEventListener('click',async()=>{
+  if(saving||uploads){feedback('Aguarde o salvamento ou envio em andamento.',true);return;}
+  if(dirty){feedback('Salve ou cancele as alterações dos formulários antes de publicar.',true);return;}
+  const config=publicSnapshot(data),players=config.teams.reduce((total,team)=>total+team.players.length,0);
+  if(!confirm('Publicar os textos e canais, '+config.teams.length+' equipes, '+players+' jogadores e '+config.leaders.length+' líderes? A lista privada de membros não será publicada.'))return;
+  saving=true;onBusy(0);
+  try {
+    if(revision===0){const saved=await repository.saveDraft(data,0);data=saved.data;revision=saved.revision;savedAt=saved.savedAt;}
+    await publishDraft(data,revision);clearPublishedCache();
+    feedback('Publicado no site. Visitantes podem levar até 2 minutos para atualizar o conteúdo em cache.');
+  } catch(error){feedback('Não foi possível publicar. '+(error.code==='PERMISSION_DENIED'?'O rascunho pode ter mudado em outra sessão. Recarregue antes de tentar novamente.':error.message),true);}
+  finally{saving=false;onBusy(0);showSaved();}
 });
 $('#auth-retry').addEventListener('click', async () => {
   try { await logout(); goToLogin(); }
@@ -206,7 +237,7 @@ try {
   const user = await currentAdmin();
   const stopWatching = watchSession((current) => {
     if (!isAdminUser(current) || current.uid !== user.uid) {
-      dirty = false; data = null; pendingImport = null; removedMember = null;
+      dirty = false; dirtyForms.clear(); data = null; pendingImport = null; removedMember = null;
       document.body.classList.add('auth-pending');
       $('#admin-content').replaceChildren();
       goToLogin();
@@ -221,6 +252,7 @@ try {
   if (path === '/admin/') $('#member-count').textContent = String(data.members.length).padStart(2, '0');
   if (path === '/admin/site/') setupSite();
   if (path === '/admin/guilda/') setupGuild();
+  if (path === '/admin/equipes/' || path === '/admin/guilda/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
   if (path === '/admin/backup/') setupBackup();
   $('#admin-content').inert = false;
   document.body.classList.remove('auth-pending');
@@ -236,5 +268,5 @@ try {
     $('#auth-retry').hidden = false;
   }
 }
-window.addEventListener('beforeunload', (event) => { if (dirty) { event.preventDefault(); event.returnValue = ''; } });
+window.addEventListener('beforeunload', (event) => { if (dirty || uploads || saving) { event.preventDefault(); event.returnValue = ''; } });
 window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });

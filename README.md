@@ -13,6 +13,7 @@ Portal institucional da Naka Gaming, organização de esports e guilda de Free F
 | `/` | `index.html` | Início e apresentação da marca |
 | `/sobre/` | `sobre/index.html` | Organização, identidade e princípios |
 | `/guilda/` | `guilda/index.html` | Comunidade e perguntas frequentes |
+| `/equipes/` | `equipes/index.html` | Abas de equipes e cards de jogadores 4:5 |
 | `/contato/` | `contato/index.html` | Instagrams e site da Central Free Fire |
 | Página não encontrada | `404.html` | Endereços inexistentes |
 
@@ -43,7 +44,7 @@ Abra http://localhost:8080. Para verificar antes de enviar:
 ```sh
 python3 scripts/check.py
 node --check assets/js/main.js
-node --test tests/admin.test.mjs
+node --test tests/*.test.mjs
 python3 scripts/build.py
 ```
 
@@ -72,18 +73,20 @@ A marca e suas imagens pertencem à Naka Gaming. A licença das fontes está em 
 
 Acesse `/admin/`. Sem sessão, o painel abre `/admin/login/`. Use a mesma conta administrativa e a mesma senha cadastrada no Firebase Authentication da Central Free Fire. A aplicação não armazena a senha em arquivos, URLs ou backups. O SDK mantém apenas a sessão na aba/navegador até sair ou encerrar a sessão do navegador.
 
-As telas são separadas em `/admin/site/`, `/admin/guilda/` e `/admin/backup/`, com CSS e módulos JavaScript próprios.
+As telas são separadas em `/admin/site/`, `/admin/equipes/`, `/admin/guilda/` e `/admin/backup/`, com CSS e módulos JavaScript próprios.
 
 ### Dados privados e publicação
 
-O mesmo projeto Firebase é usado para autenticação, mas os rascunhos da Naka ficam exclusivamente em `nakaGamingAdmin/state`, separados dos conteúdos da Central. As regras no servidor permitem leitura e escrita somente para `admin@centralfreefire.com.br`. O painel só mostra os dados depois de uma leitura autorizada no servidor. O noindex e o bloqueio visual não são controles de segurança do banco.
+O mesmo projeto Firebase é usado para autenticação, mas os rascunhos da Naka ficam exclusivamente em `nakaGamingAdmin/state`, separados dos conteúdos da Central. As regras no servidor permitem leitura e escrita somente para `admin@centralfreefire.com.br`. A publicação pública fica em `nakaGamingPublic/site`. Fotos leves ficam em `nakaGamingMedia/{id}`, acessíveis por identificador individual, com gravação apenas administrativa. O painel só mostra os rascunhos depois de uma leitura autorizada no servidor. O noindex e o bloqueio visual não são controles de segurança do banco.
 
-Os rascunhos são sincronizados na conta, com revisão transacional para evitar sobrescrever alterações feitas em outra sessão. Salvar no painel ainda não publica no portal. Para publicar, exporte a configuração e aplique-a ao repositório:
+Os rascunhos são sincronizados na conta, com revisão transacional para evitar sobrescrever alterações feitas em outra sessão. Salvar mantém o rascunho privado. Use **Publicar no site** no topo do painel para atualizar o conteúdo público, incluindo equipes e líderes visíveis. O botão recusa publicação com formulários não salvos; o servidor confere a revisão do rascunho para evitar publicar sobre edições feitas em outra sessão. Visitantes podem levar até 2 minutos para atualizar o conteúdo em cache.
+
+A exportação por arquivo continua disponível como backup e para atualizar o fallback estático pelo repositório:
 
 ```sh
 node scripts/apply-content.mjs /caminho/naka-site.json
 python3 scripts/check.py
-node --test tests/admin.test.mjs
+node --test tests/*.test.mjs
 ```
 
 O script valida os dados, atualiza `assets/data/site.json` e os textos/links de fallback nos HTMLs. Envie o commit para publicar. Backups completos incluem a lista de membros e devem ser guardados separadamente; o aplicador rejeita esses backups para não expor a lista no portal público.
@@ -107,3 +110,16 @@ A chave pública do projeto Central usa restrições de sites no Google Cloud. P
 Mantenha as restrições de APIs existentes. Em Firebase Authentication → Settings → Authorized domains, mantenha também os domínios da Naka autorizados para os fluxos de autenticação que exigem essa lista. A senha continua cadastrada uma única vez na conta administrativa existente.
 
 As páginas administrativas usam `strict-origin-when-cross-origin`: o serviço recebe a origem necessária à validação da chave, sem o caminho nem os parâmetros da página. `no-referrer` nessas páginas impediria a validação mesmo com o domínio permitido. A tela de login verifica o acesso público à configuração do serviço antes de habilitar a entrada da senha e mostra uma mensagem específica em caso de bloqueio da chave.
+
+
+## Equipes, líderes e fotos
+
+Em **Equipes**, crie a equipe que dará nome a cada aba, escolha a arte padrão e adicione os jogadores. Os controles de subir/descer definem a ordem. Cada perfil tem nick, nome, função, ID do Free Fire, Instagram, foto, enquadramento, posição vertical e visibilidade. O tema do jogador pode seguir a equipe ou ser samurai/samurai feminina. O fundo pode ser personalizado por equipe.
+
+Em **Guilda e líderes**, cadastre as lideranças públicas com foto de perfil e seus dados. A lista privada de membros é um cadastro separado; ela não aparece na página pública.
+
+As imagens podem vir de um endereço HTTPS, de um arquivo em `naka gaming/` ou de upload no painel. O upload aceita PNG, JPG, WebP e AVIF até 12 MB e 40 megapixels; converte para WebP até 480 × 720 px e 75 KB, preservando transparência. A imagem convertida fica em um registro separado, nunca embutida no conteúdo do site. Cada upload tem identificador único e imutável. Trocar a foto não exclui o upload anterior; a coleta de mídias sem referência fica para uma manutenção futura. O backup inclui as referências das fotos, não uma cópia binária delas.
+
+No portal, as imagens são carregadas sob demanda. Só a equipe da aba ativa é montada. Sem foto ou com link quebrado, a silhueta da arte escolhida permanece visível. Os cards são 4:5; as fotos dos líderes são quadradas/circulares. As artes otimizadas pesam cerca de 14–19 KB para fundos e 69–71 KB para silhuetas e são reutilizadas em cache.
+
+As diretrizes para manter o conteúdo personalizável no painel estão em [AGENTS.md](AGENTS.md). Não foram cadastrados elencos ou líderes fictícios na configuração inicial.

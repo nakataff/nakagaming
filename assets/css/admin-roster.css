@@ -1,0 +1,20 @@
+.admin-topbar>div {flex-wrap:wrap;justify-content:flex-end;gap:12px}
+.admin-topbar .publish-button {background:#27355c;color:#f7f7fb;border-color:#27355c}
+.check-label {display:flex!important;align-items:center;gap:12px}
+.check-label input {width:17px!important;height:17px;min-height:0;margin:0!important;flex:none;accent-color:#374779}
+.roster-manager-layout {display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;align-items:start}
+.profile-editor-layout {display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:22px;align-items:start}
+.profile-preview-box {position:sticky;top:20px}
+.profile-preview-box .player-card {background:#171d36;color:white;padding:0}
+.profile-preview-box .player-info {padding:20px}
+.profile-preview-box .leader-card {background:#171d36;padding:20px;color:white;flex-direction:column;align-items:flex-start}
+.profile-preview-box .leader-info {width:100%}
+.roster-admin-row {padding:17px 0;border-top:1px solid #dce0eb;overflow-wrap:anywhere}
+.roster-admin-row strong {font-size:14px;font-weight:400}
+.roster-row-actions {display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.upload-status {font-size:12px!important;color:#647499!important}
+#undo-roster {margin-bottom:24px}
+.profile-editor input[type=range] {padding:10px 0;accent-color:#4c609b}
+#player-preview .person-meta {font-size:10px}
+@media(max-width:1150px){.roster-manager-layout {grid-template-columns:1fr}.profile-editor-layout {grid-template-columns:minmax(0,1fr) 250px}}
+@media(max-width:760px){.profile-editor-layout {grid-template-columns:1fr}.profile-preview-box {position:static}.profile-preview-box .player-card {max-width:270px;margin:auto}.admin-topbar {align-items:flex-start}.admin-topbar>span {display:none}.admin-topbar>div {justify-content:flex-start}.admin-topbar .publish-button {font-size:11px}.profile-preview-box .leader-card {flex-direction:row;align-items:center}}

@@ -14,7 +14,7 @@ A ordem abaixo é uma proposta técnica, não uma lista de recursos já disponí
 2. **Autenticação administrativa:** implementada com a conta existente da Central; futuros membros devem ter identidade e permissões próprias.
 3. **Perfis:** páginas próprias, por exemplo `/perfil/`, com módulo de dados separado do código de navegação.
 4. **Membros:** área própria, por exemplo `/membros/`, para funcionalidades da guilda.
-5. **Administração:** login e rascunhos privados disponíveis; a publicação direta de conteúdo pode ser adicionada depois.
+5. **Administração:** login e rascunhos privados disponíveis; a publicação direta de textos, equipes e líderes já está disponível.
 
 ## Limites do GitHub Pages
 
@@ -39,6 +39,17 @@ O HTML e o JavaScript continuam estáticos e públicos no GitHub Pages. O contro
 
 `admin-store.mjs` implementa validação e controle de revisão com transporte injetável. `admin-cloud.mjs` faz leituras pontuais e transações no Firebase, sem listener contínuo do banco. `admin-auth.mjs` gerencia a sessão. `admin-auth-policy.mjs` contém as rotas permitidas e a identidade administrativa, sem segredos.
 
-A lista da guilda e os rascunhos não são públicos. O conteúdo publicado continua em `assets/data/site.json`. O fluxo de exportação e aplicação por commit permanece separado do salvamento privado na conta. A regra isolada da Naka foi mesclada ao arquivo de regras existente do projeto Central, sem alterar os caminhos anteriores.
+A lista privada da guilda e os rascunhos não são públicos. Equipes e lideranças marcadas para exibição são publicadas explicitamente pelo administrador. O conteúdo publicado fica em `nakaGamingPublic/site`, lido por REST com cache de sessão de 2 minutos e fallback em `assets/data/site.json`. O fluxo de exportação e aplicação por commit permanece como cópia estática opcional. A regra isolada da Naka foi mesclada ao arquivo de regras existente do projeto Central, sem alterar os caminhos anteriores.
 
 Backups da versão antiga podem ser recuperados manualmente após o login. A importação exige validação e confirmação; não há migração automática de dados locais para a conta.
+
+
+## Elencos e publicação
+
+`admin-schema.mjs` valida equipes e perfis e migra configurações antigas com listas vazias e títulos padrão. `publicSnapshot()` remove membros privados, equipes ocultas, jogadores ocultos e líderes ocultos. `admin-publish.mjs` envia somente essa representação, vinculada à revisão salva do rascunho; a regra do servidor compara a revisão com `nakaGamingAdmin/state/revision`.
+
+`admin-rosters.mjs` compartilha os controles de perfil entre equipes e líderes. `roster-view.mjs` monta os cards por DOM seguro, sem interpolar HTML vindo dos cadastros. `teams.mjs` mantém apenas a aba ativa no DOM e oferece navegação de teclado. `roster-media.mjs` busca as imagens quando próximas da tela, reutiliza respostas por identificador e restaura a silhueta em caso de falha.
+
+`image-compress.mjs` reduz imagens no navegador, sem remover transparência. `admin-media.mjs` grava WebP em registros individuais de até 110.000 caracteres base64. Os arquivos são públicos por identificador, sem leitura pública da lista inteira; a conta administrativa só cria registros novos. Dados de imagem não acompanham as leituras de conteúdo. Essa abordagem usa o Realtime Database já disponível, sem credenciais adicionais de armazenamento; as imagens têm teto de 75 KB antes da codificação. Uma galeria maior deverá migrar o transporte para armazenamento de objetos, preservando as referências dos perfis.
+
+Os backups guardam as referências dos uploads, não o binário. Uploads substituídos são preservados; uma coleta futura precisa considerar todos os rascunhos e publicações antes de excluir arquivos. Não há exclusão automática de mídia em uso.
