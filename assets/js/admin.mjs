@@ -1,10 +1,10 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-emufix';
-import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-emufix';
-import {mountRosters} from './admin-rosters.mjs?v=20261101-news';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-identity';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-identity';
+import {mountRosters} from './admin-rosters.mjs?v=20261101-identity';
 import {mountCompetition} from './admin-competition.mjs?v=20261101-emufix';
-import {clearPublishedCache} from './site-data.mjs?v=20261101-news';
-import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-news';
-import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-news';
+import {clearPublishedCache} from './site-data.mjs?v=20261101-identity';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-identity';
+import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-identity';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
