@@ -1,3 +1,4 @@
+import {resultCopyText,placementLabel} from './competition-copy.mjs?v=20261101-copy';
 const $=selector=>document.querySelector(selector);
 const NEW_ID=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID().replaceAll('-',''):Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
 const MODE_NAMES={'free-fire':'Free Fire',hok:'Honor of Kings',valorant:'Valorant',cs2:'CS2'};
@@ -56,12 +57,21 @@ export function mountCompetition({getData,persist,feedback,markDirty,isFormDirty
       render();
     }catch(error){feedback(error.message,true);}
   }
+  async function copyText(text,successMessage) {
+    try {
+      if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
+      else {const field=document.createElement('textarea');field.value=text;field.style.position='fixed';field.style.opacity='0';document.body.append(field);field.select();const ok=document.execCommand('copy');field.remove();if(!ok)throw new Error('Clipboard');}
+      feedback(successMessage);
+    }catch {feedback('Não foi possível copiar automaticamente. Verifique as permissões do navegador.',true);}
+  }
+  function filteredRows(kind){
+    const game=filters.game.value,platform=filters.platform.value,term=filters.search.value.trim().toLocaleLowerCase('pt-BR');
+    return getData().competition[kind].filter(record=>(!game||record.game===game)&&(!platform||record.platform===platform)&&(!term||record.tournament.toLocaleLowerCase('pt-BR').includes(term)))
+      .sort((a,b)=>b.date.localeCompare(a.date)||a.tournament.localeCompare(b.tournament));
+  }
   function renderList(kind) {
     const list=$(kindDefs[kind].list);
-    const game=filters.game.value,platform=filters.platform.value,term=filters.search.value.trim().toLocaleLowerCase('pt-BR');
-    const filtered=getData().competition[kind]
-      .filter(record=>(!game||record.game===game)&&(!platform||record.platform===platform)&&(!term||record.tournament.toLocaleLowerCase('pt-BR').includes(term)))
-      .sort((a,b)=>b.date.localeCompare(a.date)||a.tournament.localeCompare(b.tournament));
+    const filtered=filteredRows(kind);
     list.replaceChildren();
     $('#competition-'+kind+'-count').textContent=filtered.length+' registros';
     if(!filtered.length){list.append(create('p','field-help','Nenhum cadastro para os filtros escolhidos.'));return;}
@@ -69,12 +79,13 @@ export function mountCompetition({getData,persist,feedback,markDirty,isFormDirty
       const row=create('article','roster-admin-row');
       const summary=create('div','');
       summary.append(create('strong','',record.tournament+(record.visible?'':' · Oculto')));
-      summary.append(create('p','field-help',formatted(record.date)+' · '+MODE_NAMES[record.game]+' / '+platformLabel(record.platform)+(record.tier?' · '+record.tier:'')+(record.placement?' · '+record.placement:'')));
+      summary.append(create('p','field-help',formatted(record.date)+' · '+MODE_NAMES[record.game]+' / '+platformLabel(record.platform)+(record.tier?' · '+record.tier:'')+(kind==='results'?' · Colocação: '+placementLabel(record.placement):'')));
       const buttons=create('div','roster-row-actions');
       const edit=create('button','link-button','Editar'),remove=create('button','link-button','Remover');
       edit.type='button';remove.type='button';
       edit.addEventListener('click',()=>editRow(kind,record));remove.addEventListener('click',()=>removeRow(kind,record));
       buttons.append(edit,remove);
+      if(kind==='results'){const copy=create('button','link-button','Copiar');copy.type='button';copy.addEventListener('click',()=>copyText(resultCopyText([record],{gameName:MODE_NAMES[record.game],platform:platformLabel(record.platform)}),'Resultado copiado com a colocação.'));buttons.append(copy);}
       if(record.link){const href=create('a','link-button','Liquipedia ↗');href.href=record.link;href.target='_blank';href.rel='noopener noreferrer';buttons.append(href);}
       row.append(summary,buttons);list.append(row);
     }
@@ -97,6 +108,8 @@ export function mountCompetition({getData,persist,feedback,markDirty,isFormDirty
     form.querySelector('[data-cancel]').addEventListener('click',()=>{if(checkAbandon(form))resetForm(kind);});
     resetForm(kind);
   }
+  const copyAll=$('#copy-admin-results');
+  if(copyAll)copyAll.addEventListener('click',()=>{const rows=filteredRows('results');copyText(resultCopyText(rows,{gameName:MODE_NAMES[filters.game.value]||'NAKA GAMING',platform:filters.platform.value?platformLabel(filters.platform.value):'',format:'cards'}),rows.length+' resultados filtrados copiados com colocação.');});
   for(const value of Object.values(filters))value.addEventListener(value===filters.search?'input':'change',render);
   render();
 }

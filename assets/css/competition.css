@@ -43,3 +43,19 @@
 @media(max-width:850px){.comp-mode-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.comp-hub-grid{grid-template-columns:1fr}.comp-table{min-width:650px}}
 @media(max-width:560px){.comp-wrap{padding:23px 0 65px}.comp-mode-nav{gap:7px;margin-bottom:25px}.comp-mode-nav a{font-size:18px;padding:16px 12px}.comp-platform-nav button{flex:1}.comp-section-head{align-items:flex-start;flex-direction:column;gap:6px}.comp-section{padding-bottom:25px}.comp-honor{flex-wrap:wrap}.comp-honor a{margin-left:0;width:100%}.comp-filters label,.comp-filters input{width:100%}.comp-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.comp-filters label:last-child{grid-column:span 2}}
 @media(prefers-reduced-motion:reduce){.comp-hub-card{transition:none}}
+
+/* Exportação textual do histórico de resultados */
+.comp-copy-toolbar{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:0 0 18px;padding:16px;background:#171e35;border:1px solid #394361}
+.comp-copy-toolbar>label:not(.comp-copy-checkbox){font-size:11px;color:#b6c5e5;display:grid;gap:7px}
+.comp-copy-toolbar select{min-height:40px;min-width:170px;background:#252f50;color:#f6f7ff;border:1px solid #576587;padding:8px 10px;font:13px var(--body)}
+.comp-copy-checkbox{display:inline-flex;align-items:center;gap:8px;color:#d8e0f6;font-size:12px;cursor:pointer;min-height:40px}
+.comp-copy-checkbox input{width:16px;height:16px;accent-color:#adbcff;margin:0}
+.comp-copy-button{border:1px solid #b4bfff;background:#b4bfff;color:#111329;padding:11px 16px;font:700 13px var(--body);cursor:pointer;min-height:40px}
+.comp-copy-button:hover{background:#e0e5ff}
+.comp-copy-status{font-size:12px;color:#bacbff;flex:1 1 170px;align-self:center}
+.comp-copy-preview{display:block;width:100%;box-sizing:border-box;min-height:120px;margin:0 0 18px;background:#19213b;color:white;border:1px solid #576587;padding:12px;font:12px/1.55 monospace}
+.comp-copy-preview[hidden]{display:none!important}
+.placement.is-unknown{background:transparent;color:#aeb6ce;font-size:11px;min-width:100px}
+.placement.is-second{background:#4c6173;color:white}
+.placement.is-third{background:#805337;color:#fff}
+@media(max-width:560px){.comp-copy-toolbar>label:not(.comp-copy-checkbox){flex:1;min-width:100%}.comp-copy-toolbar select{width:100%}.comp-copy-button{flex:1 1 100%}.comp-copy-checkbox{flex:1 1 100%}}
