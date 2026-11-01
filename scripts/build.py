@@ -4,7 +4,7 @@ import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / 'dist'
-PAGES = ('index.html', 'noticias/index.html', 'noticias/ler/index.html', 'admin/noticias/index.html', 'sobre/index.html', 'equipes/index.html', 'admin/equipes/index.html', 'guilda/index.html', 'contato/index.html', '404.html', 'admin/index.html', 'admin/site/index.html', 'admin/guilda/index.html', 'admin/backup/index.html', 'admin/login/index.html')
+PAGES = ('index.html', 'noticias/index.html', 'noticias/ler/index.html', 'admin/noticias/index.html', 'sobre/index.html', 'equipes/index.html', 'equipes/free-fire/index.html', 'equipes/hok/index.html', 'equipes/valorant/index.html', 'equipes/cs2/index.html', 'admin/competitivo/index.html', 'admin/equipes/index.html', 'guilda/index.html', 'contato/index.html', '404.html', 'admin/index.html', 'admin/site/index.html', 'admin/guilda/index.html', 'admin/backup/index.html', 'admin/login/index.html')
 ALIASES = ('sobre.html', 'guilda.html', 'contato.html')
 PUBLIC_FILES = (*PAGES, *ALIASES, 'CNAME', '.nojekyll', 'robots.txt', 'sitemap.xml')
 
