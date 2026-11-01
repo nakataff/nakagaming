@@ -2,6 +2,7 @@ import {INITIAL_RESULTS} from './competitive-seed.mjs?v=20261101-emufix';
 import {correctLegacyEmulatorHistory} from './competitive-emulator-migration.mjs';
 export const CONTENT_FIELDS = {
   newsTitle: ['Título da seção de notícias', 90], newsIntro: ['Apresentação das notícias', 500],
+  supportApproach: ['Como apoiamos os atletas', 1400], prizePolicy: ['Transparência nas premiações', 1400], lineInvitation: ['Convite para lines competitivas', 600],
   homeTitle: ['Título principal', 40], homeSubtitle: ['Segunda linha', 30],
   homeHighlight: ['Palavra em destaque', 30], homeDescription: ['Descrição da home', 400],
   aboutIntro: ['Apresentação da Naka', 600], aboutDescription: ['Identidade da Naka', 1500],
@@ -18,7 +19,30 @@ export const LINK_FIELDS = {
 export const ROLES = ['Jogador', 'Liderança', 'Comissão técnica', 'Criador de conteúdo'];
 export const STATUSES = ['Ativo', 'Reserva', 'Saída'];
 const LINK_DEFAULTS={guildInstagram:'https://www.instagram.com/nakateamff/'};
-const CONTENT_DEFAULTS = {newsTitle:'POR DENTRO DA NAKA.',newsIntro:'Resultados, novidades e os projetos que fazem parte da nossa história.',guildRecruitment:'O recrutamento da guilda é feito pelo Instagram oficial @nakateamff. Entre em contato por lá para saber os critérios e as vagas disponíveis.',teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.'};
+const CONTENT_DEFAULTS = {newsTitle:'POR DENTRO DA NAKA.',newsIntro:'Resultados, novidades e os projetos que fazem parte da nossa história.',guildRecruitment:'O recrutamento da guilda é feito pelo Instagram oficial @nakateamff. Entre em contato por lá para saber os critérios e as vagas disponíveis.',teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.',supportApproach:"A Naka Gaming ainda não conta com investimento de patrocinadores. Nosso papel hoje é dar identidade, espaço e visibilidade às equipes e aos atletas que representam a organização, apoiando sua imagem e a construção de novas oportunidades.",prizePolicy:"Nas premiações coletivas, nossa prática habitual é dividir os valores de forma igualitária entre os participantes do acordo, incluindo a gestão da Naka Gaming. Prêmios individuais, como MVP e reconhecimentos semelhantes, são destinados integralmente ao atleta contemplado. As condições são alinhadas previamente com cada line.",lineInvitation:"Tem uma line competitiva e quer representar a Naka Gaming? Apresente a modalidade, o elenco e seus objetivos pelo Instagram @nakataff."};
+const LEGACY_COPY = {
+  "homeDescription": "A força de uma organização.\nA união de uma guilda. Esse é o nosso caminho.",
+  "aboutIntro": "A Naka Gaming é uma organização de esports e uma guilda de Free Fire.",
+  "aboutDescription": "A referência samurai dá forma à nossa identidade visual e aos valores que queremos levar para o jogo: disciplina para evoluir, respeito por quem está ao lado e compromisso com o coletivo.",
+  "aboutMission": "Nosso símbolo é o ponto de encontro entre a organização e a comunidade. Mais do que um nome na partida, uma bandeira compartilhada.",
+  "guildIntro": "Um espaço para quem compartilha a paixão pelo Free Fire e o orgulho de representar a Naka Gaming.",
+  "contactIntro": "Acompanhe a organização e fale com a gente pelo Instagram.",
+  "teamsIntro": "Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.",
+  "footerTagline": "O mesmo símbolo.\nO mesmo propósito."
+};
+const CONTENT_DEFAULTS_MODERN = {
+  "homeDescription": "Uma organização independente que valoriza equipes, fortalece a imagem dos atletas e abre caminhos no cenário competitivo.",
+  "aboutIntro": "A Naka Gaming é uma organização independente de esports, com foco em representar equipes e dar visibilidade a atletas em desenvolvimento.",
+  "aboutDescription": "Com identidade própria e presença no cenário, buscamos fortalecer a imagem das lines que representam a Naka Gaming, valorizando suas trajetórias e conquistas dentro e fora das competições.",
+  "aboutMission": "Nosso objetivo é contribuir para que jogadores e equipes ganhem experiência, reconhecimento e oportunidades de evolução, inclusive quando o próximo passo estiver em uma organização com mais estrutura.",
+  "guildIntro": "A guilda é uma iniciativa comunitária da Naka Gaming voltada aos jogadores de Free Fire. Ela possui sua própria liderança e funciona de forma independente da gestão competitiva da organização.",
+  "contactIntro": "Sua line quer representar a Naka Gaming? Entre em contato diretamente com o Nakata pelo Instagram para apresentar seu elenco e seus objetivos.",
+  "teamsIntro": "Nossos elencos representam a Naka Gaming em diferentes modalidades. Competitividade, identidade e valorização de cada atleta.",
+  "footerTagline": "Nossa bandeira.\nO talento de cada atleta.",
+  "supportApproach": "A Naka Gaming ainda não conta com investimento de patrocinadores. Nosso papel hoje é dar identidade, espaço e visibilidade às equipes e aos atletas que representam a organização, apoiando sua imagem e a construção de novas oportunidades.",
+  "prizePolicy": "Nas premiações coletivas, nossa prática habitual é dividir os valores de forma igualitária entre os participantes do acordo, incluindo a gestão da Naka Gaming. Prêmios individuais, como MVP e reconhecimentos semelhantes, são destinados integralmente ao atleta contemplado. As condições são alinhadas previamente com cada line.",
+  "lineInvitation": "Tem uma line competitiva e quer representar a Naka Gaming? Apresente a modalidade, o elenco e seus objetivos pelo Instagram @nakataff."
+};
 const object = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 function text(value, label, limit) {
   if (typeof value !== 'string' || !value.trim() || value.trim().length > limit) {
@@ -31,7 +55,13 @@ export function validatePublic(input) {
     throw new Error('Arquivo incompatível. Use uma configuração exportada pelo painel Naka.');
   }
   const content = {}, links = {};
-  for (const [key, [label, limit]] of Object.entries(CONTENT_FIELDS)) content[key] = text(input.content[key] ?? CONTENT_DEFAULTS[key], label, limit);
+  for (const [key, [label, limit]] of Object.entries(CONTENT_FIELDS)) {
+    const candidate=input.content[key];
+    // Textos publicados na identidade anterior são substituídos apenas quando idênticos aos antigos padrões.
+    // Alterações personalizadas feitas no painel permanecem intactas.
+    const current=Object.hasOwn(LEGACY_COPY,key) && candidate===LEGACY_COPY[key] ? CONTENT_DEFAULTS_MODERN[key] : candidate;
+    content[key]=text(current ?? CONTENT_DEFAULTS[key],label,limit);
+  }
   for (const [key, label] of Object.entries(LINK_FIELDS)) {
     const raw = text(input.links[key] ?? LINK_DEFAULTS[key], label, 400);
     let url;
@@ -42,7 +72,7 @@ export function validatePublic(input) {
     }
     links[key] = url.href;
   }
-  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), competition:validateCompetition(correctLegacyEmulatorHistory(input.competition ?? {results:INITIAL_RESULTS,titles:[]})) };
+  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), organizationLeaders:validateLeaders(input.organizationLeaders ?? []), competition:validateCompetition(correctLegacyEmulatorHistory(input.competition ?? {results:INITIAL_RESULTS,titles:[]})) };
 }
 export function validateBackup(input) {
   const config = validatePublic(input);
@@ -129,6 +159,7 @@ export function publicSnapshot(input) {
   const config=validatePublic(input);
   config.teams=config.teams.filter(t=>t.visible).map(t=>({...t,players:t.players.filter(p=>p.visible)}));
   config.leaders=config.leaders.filter(p=>p.visible);
+  config.organizationLeaders=config.organizationLeaders.filter(p=>p.visible);
   config.competition.results=config.competition.results.filter(r=>r.visible);
   config.competition.titles=config.competition.titles.filter(r=>r.visible);
   return config;
