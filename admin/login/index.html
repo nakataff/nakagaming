@@ -11,7 +11,7 @@ document.querySelector('#toggle-password').addEventListener('click', (event) => 
   event.currentTarget.textContent = show ? 'Ocultar' : 'Mostrar'; event.currentTarget.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha'); event.currentTarget.setAttribute('aria-pressed', String(show));
 });
 try {
-  const auth = await import('/assets/js/admin-auth.mjs?v=20261101-news');
+  const auth = await import('/assets/js/admin-auth.mjs?v=20261101-identity');
   await auth.checkAccess();
   try { await auth.currentAdmin(); location.replace(next); } catch (error) { if (error.code !== 'naka/auth-required') throw error; }
   message.textContent = ''; submit.disabled = false;
