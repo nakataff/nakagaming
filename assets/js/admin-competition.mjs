@@ -198,9 +198,10 @@ export function mountCompetition({getData,persist,feedback,markDirty,isFormDirty
         // Validação centralizada, inclusive dos limites e da lista privada.
         validateBackup(next);
         await persist(next,result.plan.counts.add+' novos resultados e '+result.plan.counts.update+' atualizações salvos no rascunho. Clique em Publicar no site.',form);
+        const importedGame=game.value,importedPlatform=platform.value;
         clearForm();
-        filters.game.value=game.value;
-        filters.platform.value='';filters.search.value='';
+        filters.game.value=importedGame;
+        filters.platform.value=importedPlatform;filters.search.value='';
         render();
         message.textContent='Importação concluída no rascunho. Use Publicar no site para colocar os resultados no ar.';
       }catch(error){message.textContent='Não foi possível importar: '+error.message;feedback(error.message,true);}
