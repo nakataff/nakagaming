@@ -60,3 +60,5 @@
 @media(prefers-reduced-motion:reduce) {.portrait-person {transition:none}}
 
 .portrait-person.has-crop {position:absolute;max-width:none;padding:0;transform:none!important}
+
+.faq-list .person-instagram {color:#485b96;display:inline-flex;text-decoration:underline;text-underline-offset:4px;margin-bottom:16px}
