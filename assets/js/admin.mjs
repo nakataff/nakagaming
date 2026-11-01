@@ -221,7 +221,7 @@ $('#publish-site').addEventListener('click',async()=>{
   if(saving||uploads){feedback('Aguarde o salvamento ou envio em andamento.',true);return;}
   if(dirty){feedback('Salve ou cancele as alterações dos formulários antes de publicar.',true);return;}
   const config=publicSnapshot(data),players=config.teams.reduce((total,team)=>total+team.players.length,0);
-  if(!confirm('Publicar os textos e canais, '+config.teams.length+' equipes, '+players+' jogadores e '+config.leaders.length+' líderes? A lista privada de membros não será publicada.'))return;
+  if(!confirm('Publicar os textos e canais, '+config.teams.length+' equipes, '+players+' jogadores e '+config.organizationLeaders.length+' responsáveis pela organização e '+config.leaders.length+' líderes da guilda? A lista privada de membros não será publicada.'))return;
   saving=true;onBusy(0);
   try {
     if(revision===0){const saved=await repository.saveDraft(data,0);data=saved.data;revision=saved.revision;savedAt=saved.savedAt;}
@@ -254,7 +254,7 @@ try {
   if (path === '/admin/') $('#member-count').textContent = String(data.members.length).padStart(2, '0');
   if (path === '/admin/site/') setupSite();
   if (path === '/admin/guilda/') setupGuild();
-  if (path === '/admin/equipes/' || path === '/admin/guilda/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
+  if (path === '/admin/equipes/' || path === '/admin/guilda/' || path === '/admin/organizacao/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
   if (path === '/admin/competitivo/') mountCompetition({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form)});
   if (path === '/admin/noticias/') {
     const [{mountNews},{newsRepository}]=await Promise.all([import('./admin-news.mjs?v=20261101-news'),import('./news-cloud.mjs?v=20261101-news')]);
