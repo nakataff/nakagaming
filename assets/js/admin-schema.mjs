@@ -1,4 +1,5 @@
 import {INITIAL_RESULTS} from './competitive-seed.mjs';
+import {correctLegacyEmulatorHistory} from './competitive-emulator-migration.mjs';
 export const CONTENT_FIELDS = {
   newsTitle: ['Título da seção de notícias', 90], newsIntro: ['Apresentação das notícias', 500],
   homeTitle: ['Título principal', 40], homeSubtitle: ['Segunda linha', 30],
@@ -41,7 +42,7 @@ export function validatePublic(input) {
     }
     links[key] = url.href;
   }
-  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), competition:validateCompetition(input.competition ?? {results:INITIAL_RESULTS,titles:[]}) };
+  return { schemaVersion: 1, content, links, teams:validateTeams(input.teams ?? []), leaders:validateLeaders(input.leaders ?? []), competition:validateCompetition(correctLegacyEmulatorHistory(input.competition ?? {results:INITIAL_RESULTS,titles:[]})) };
 }
 export function validateBackup(input) {
   const config = validatePublic(input);
