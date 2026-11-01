@@ -29,6 +29,15 @@
 
 - Páginas de modalidade ficam em `/equipes/free-fire/`, `/equipes/hok/`, `/equipes/valorant/` e `/equipes/cs2/`. Free Fire separa Emulador de Mobile via aba na mesma página.
 - Elencos usam o cadastro de equipes original (agora com modalidade e plataforma). Resultados e títulos são editados em `/admin/competitivo/`, dentro da mesma publicação existente.
-- O histórico inicial contém 30 participações fornecidas pelo administrador, sem inferir colocações ausentes. Títulos só entram após confirmação; vice-campeonato não deve ser contado como título.
+- O histórico inicial do Emulador contém 29 participações corrigidas pelo administrador, com a Liga UBFF Season 23 apenas no histórico Mobile quando cadastrada. Títulos só entram após confirmação; vice-campeonato não deve ser contado como título.
 - Links específicos da Liquipedia devem ser verificados; quando indisponíveis, ofereça busca claramente identificada, sem inventar uma URL de torneio.
 - Mantenha compatibilidade de rascunhos anteriores: `competition` ausente recebe o histórico inicial; `competition.results: []` explícito significa vazio. O snapshot público deve filtrar registros ocultos.
+
+## Posicionamento institucional
+
+- A Naka Gaming é prioritariamente uma organização independente de esports; a guilda é um projeto comunitário secundário de Free Fire.
+- No momento, a organização não conta com investimento de patrocinadores. Comunicar apoio à identidade, imagem e visibilidade dos atletas sem sugerir contratos profissionais, salário ou estrutura financeira inexistente.
+- Premiações coletivas costumam ser divididas em partes iguais entre os participantes do acordo, incluindo a gestão da Naka; prêmios individuais (como MVP) pertencem ao atleta. O acordo específico deve ser combinado previamente, sem afirmar obrigação universal.
+- Lines interessadas em representar a organização entram em contato por Instagram via `links.personalInstagram` (atualmente @nakataff). Recrutamento da guilda usa outro canal (`links.guildInstagram`).
+- `organizationLeaders` é a direção da organização, gerenciada em `/admin/organizacao/` e exibida em `/sobre/#direcao`. `leaders` permanece exclusivamente a liderança da guilda em `/admin/guilda/` e `/guilda/#lideranca`. Não misturar os cadastros nem inferir nomes.
+- Os textos `supportApproach`, `prizePolicy` e `lineInvitation` são editáveis em `/admin/site/`; migrar somente valores que ainda correspondem exatamente às cópias antigas, preservando os personalizados.

@@ -1,0 +1,61 @@
+/* A organização competitiva é a frente principal; a guilda recebe destaque secundário. */
+.organization-model{padding:88px 0 85px;background:#12182d;color:#f5f6ff}
+.organization-model .section-heading{margin-bottom:38px}
+.organization-model .section-note{color:#9aa9ce}
+.organization-model-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8%}
+.organization-model h2{font-size:clamp(48px,5.4vw,80px);line-height:.96;margin:0 0 27px}
+.organization-model h2 span{color:#b9c7ff}
+.organization-model p.lead{font-size:18px;line-height:1.65;color:#c4ccdf;max-width:570px}
+.organization-model-points{display:grid;gap:0}
+.organization-model-points article{display:grid;grid-template-columns:36px 1fr;gap:18px;border-top:1px solid #46506a;padding:23px 0}
+.organization-model-points article:last-child{border-bottom:1px solid #46506a}
+.organization-model-points article>span{font-size:11px;color:#b6c5ff;padding-top:5px}
+.organization-model-points h3{font:700 30px/1.1 var(--display);text-transform:uppercase;margin:0 0 9px}
+.organization-model-points p{color:#acb6d0;font-size:14px;line-height:1.65;margin:0}
+.organization-model .text-link{display:inline-flex;align-items:center;gap:14px;margin-top:22px;color:#cbd6ff}
+.organization-model .text-link svg{width:22px}
+.organization-invite{padding:70px 0;background:#e9ebf5;color:#12182d}
+.organization-invite-grid{display:flex;align-items:center;justify-content:space-between;gap:48px}
+.organization-invite .eyebrow{color:#5f709f}
+.organization-invite h2{font-size:clamp(43px,5vw,72px);margin:0 0 15px;line-height:.98}
+.organization-invite h2 span{color:#626d9f}
+.organization-invite p:not(.eyebrow){font-size:15px;max-width:580px;color:#505a79}
+.organization-invite .button{flex:none;background:#11162b;color:#fff;white-space:nowrap}
+.community-compact{padding:43px 0;background:#222743;color:#f0f3ff}
+.community-compact-grid{display:flex;align-items:center;justify-content:space-between;gap:40px}
+.community-compact h2{font:700 clamp(26px,2.7vw,41px)/1.1 var(--display);margin:0 0 10px}
+.community-compact p:not(.eyebrow){font-size:14px;color:#bfc8e3;max-width:680px;margin:0}
+.community-compact .text-link{white-space:nowrap;color:#d4ddff;display:flex;gap:12px;align-items:center}
+.community-compact svg{width:20px}
+.organization-details{padding:85px 0 95px}
+.organization-details h2{font:700 clamp(46px,5.1vw,70px)/1 var(--display);margin:0 0 48px}
+.organization-details h2 span{color:#6977a8}
+.organization-detail-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #bfc6d9}
+.organization-detail-grid article{padding:28px 46px 24px 0}
+.organization-detail-grid article+article{padding:28px 0 24px 46px;border-left:1px solid #bfc6d9}
+.organization-detail-grid .detail-number{font-size:11px;color:#6977a8}
+.organization-detail-grid h3{font:700 clamp(28px,3vw,42px)/1.07 var(--display);margin:18px 0 12px}
+.organization-detail-grid p{font-size:16px;line-height:1.7;color:#444d68;max-width:640px}
+.organization-detail-note{font-size:13px;color:#686f88;margin:23px 0 0}
+.organization-directors .text-link{color:#c4d0ff;display:inline-flex;gap:12px;align-items:center;margin-top:22px}
+.organization-directors .text-link svg{width:20px}
+.organization-directors .leaders-heading h2{max-width:700px}
+@media(max-width:850px){
+ .organization-model-grid{grid-template-columns:1fr;gap:25px}
+ .organization-model{padding:66px 0}
+ .organization-invite-grid,.community-compact-grid{align-items:flex-start;flex-direction:column;gap:20px}
+ .organization-invite .button{white-space:normal}
+ .organization-details{padding:65px 0}
+ .organization-detail-grid{grid-template-columns:1fr}
+ .organization-detail-grid article,.organization-detail-grid article+article{padding:26px 0;border-left:0}
+ .organization-detail-grid article+article{border-top:1px solid #bfc6d9}
+}
+@media(max-width:540px){
+ .organization-model{padding:48px 0 60px}
+ .organization-model .section-heading{gap:9px;flex-wrap:wrap}
+ .organization-model-points h3{font-size:27px}
+ .organization-model-points article{grid-template-columns:26px 1fr;gap:14px}
+ .organization-invite{padding:50px 0}
+ .community-compact{padding:33px 0}
+ .organization-details h2{margin-bottom:30px}
+}

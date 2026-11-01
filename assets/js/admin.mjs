@@ -1,10 +1,10 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-emufix';
-import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-emufix';
-import {mountRosters} from './admin-rosters.mjs?v=20261101-news';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-identity';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-identity';
+import {mountRosters} from './admin-rosters.mjs?v=20261101-identity';
 import {mountCompetition} from './admin-competition.mjs?v=20261101-emufix';
-import {clearPublishedCache} from './site-data.mjs?v=20261101-news';
-import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-news';
-import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-news';
+import {clearPublishedCache} from './site-data.mjs?v=20261101-identity';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-identity';
+import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-identity';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
@@ -221,7 +221,7 @@ $('#publish-site').addEventListener('click',async()=>{
   if(saving||uploads){feedback('Aguarde o salvamento ou envio em andamento.',true);return;}
   if(dirty){feedback('Salve ou cancele as alterações dos formulários antes de publicar.',true);return;}
   const config=publicSnapshot(data),players=config.teams.reduce((total,team)=>total+team.players.length,0);
-  if(!confirm('Publicar os textos e canais, '+config.teams.length+' equipes, '+players+' jogadores e '+config.leaders.length+' líderes? A lista privada de membros não será publicada.'))return;
+  if(!confirm('Publicar os textos e canais, '+config.teams.length+' equipes, '+players+' jogadores e '+config.organizationLeaders.length+' responsáveis pela organização e '+config.leaders.length+' líderes da guilda? A lista privada de membros não será publicada.'))return;
   saving=true;onBusy(0);
   try {
     if(revision===0){const saved=await repository.saveDraft(data,0);data=saved.data;revision=saved.revision;savedAt=saved.savedAt;}
@@ -254,7 +254,7 @@ try {
   if (path === '/admin/') $('#member-count').textContent = String(data.members.length).padStart(2, '0');
   if (path === '/admin/site/') setupSite();
   if (path === '/admin/guilda/') setupGuild();
-  if (path === '/admin/equipes/' || path === '/admin/guilda/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
+  if (path === '/admin/equipes/' || path === '/admin/guilda/' || path === '/admin/organizacao/') mountRosters({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form),onBusy});
   if (path === '/admin/competitivo/') mountCompetition({getData:()=>data,persist,feedback,markDirty,isFormDirty:form=>dirtyForms.has(form)});
   if (path === '/admin/noticias/') {
     const [{mountNews},{newsRepository}]=await Promise.all([import('./admin-news.mjs?v=20261101-news'),import('./news-cloud.mjs?v=20261101-news')]);
