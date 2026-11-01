@@ -1,8 +1,8 @@
 import {get, ref, set, runTransaction, serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js';
-import {database} from './firebase-client.mjs?v=20261101-rosters';
-import {getCurrentAdmin} from './admin-auth.mjs?v=20261101-rosters';
-import {createDraftRepository} from './admin-store.mjs?v=20261101-rosters';
-import {createPublisher} from './admin-publish.mjs?v=20261101-rosters';
+import {database} from './firebase-client.mjs?v=20261101-crop';
+import {getCurrentAdmin} from './admin-auth.mjs?v=20261101-crop';
+import {createDraftRepository} from './admin-store.mjs?v=20261101-crop';
+import {createPublisher} from './admin-publish.mjs?v=20261101-crop';
 export const publishDraft=createPublisher({getUser:getCurrentAdmin,write:payload=>set(ref(database,'nakaGamingPublic/site'),payload),timestamp:serverTimestamp});
 const reference = ref(database, 'nakaGamingAdmin/state');
 export const repository = createDraftRepository({

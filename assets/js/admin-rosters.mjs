@@ -1,14 +1,16 @@
-import {validatePhoto,validateInstagram} from './admin-schema.mjs?v=20261101-rosters';
-import {releaseMedia} from './roster-media.mjs?v=20261101-rosters';
-import {personCard} from './roster-view.mjs?v=20261101-rosters';
-import {uploadPhoto} from './admin-media.mjs?v=20261101-rosters';
+import {validatePhoto,validateInstagram} from './admin-schema.mjs?v=20261101-crop';
+import {releaseMedia} from './roster-media.mjs?v=20261101-crop';
+import {personCard} from './roster-view.mjs?v=20261101-crop';
+import {uploadPhoto} from './admin-media.mjs?v=20261101-crop';
+import {createPhotoCrop} from './admin-photo-crop.mjs?v=20261101-crop';
 const $=s=>document.querySelector(s);
 const id=()=>(typeof crypto.randomUUID==='function'?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),byte=>byte.toString(16).padStart(2,'0')).join(''));
 const field=(form,key)=>form.elements.namedItem(key);
 function readProfile(form) {
   const result={id:field(form,'id').value || id()};
   for(const key of ['nick','name','role','ffId','instagram','photo','theme','photoFit'])result[key]=field(form,key).value.trim();
-  result.photoPosition=Number(field(form,'photoPosition').value);result.visible=field(form,'visible').checked;return result;
+  for(const key of ['photoPosition','photoPositionX','photoZoom'])result[key]=Number(field(form,key).value);
+  result.visible=field(form,'visible').checked;return result;
 }
 function fill(form,record={}) {
   form.reset();for(const [key,value]of Object.entries(record)){const input=field(form,key);if(!input)continue;if(input.type==='checkbox')input.checked=value;else input.value=value;}
@@ -29,6 +31,8 @@ function list(container,items,{edit,remove,move,label}) {
 export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onBusy}) {
   const isTeams=!!$('#team-form'),form=$(isTeams?'#player-form':'#leader-form'),kind=isTeams?'player':'leader';
   let selectedTeam='',undo=null;
+  const crop=createPhotoCrop({form,getProfile:()=>readProfile(form),onApply:()=>{markDirty(form,true);preview();feedback('Enquadramento aplicado. Salve o cadastro e publique para atualizar a foto no site.');},feedback,circle:!isTeams});
+  form.querySelector('[data-adjust-photo]').addEventListener('click',()=>crop.open());
   const undoButton=$('#undo-roster');
   function clearUndo(){undo=null;undoButton.hidden=true;}
   function discard(target){return !isFormDirty(target)||confirm('Descartar as alterações ainda não salvas neste formulário?');}
@@ -43,7 +47,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
     fill(form);field(form,'id').value='';if(isTeams)field(form,'theme').value='inherit';
     $('#'+kind+'-form-title').textContent=isTeams?'Adicionar jogador':'Adicionar líder';markDirty(form,false);preview();
   }
-  function editProfile(profile){if(!discard(form))return;fill(form,profile);markDirty(form,false);$('#'+kind+'-form-title').textContent='Editar '+(isTeams?'jogador':'líder');preview();form.scrollIntoView({block:'start',behavior:'smooth'});}
+  function editProfile(profile){if(!discard(form))return;fill(form,profile);markDirty(form,false);$('#'+kind+'-form-title').textContent='Editar '+(isTeams?'jogador':'líder');preview();form.scrollIntoView({block:'start',behavior:'instant'});}
   async function changeList(mutator,message){
     try{const next=structuredClone(getData());mutator(next);await persist(next,message);clearUndo();render();}
     catch(error){feedback(error.message,true);}
@@ -93,7 +97,7 @@ export function mountRosters({getData,persist,feedback,markDirty,isFormDirty,onB
     const input=field(target,fileName);input.addEventListener('change',async()=>{
       const file=input.files[0];if(!file)return;
       onBusy(1);const status=target.querySelector('.upload-status');status.textContent='Otimizando e enviando imagem…';
-      try{field(target,resultName).value=await uploadPhoto(file);markDirty(target,true);status.textContent='Imagem enviada em WebP. Salve o cadastro e publique quando estiver pronto.';if(target===form)preview();}
+      try{field(target,resultName).value=await uploadPhoto(file);markDirty(target,true);status.textContent='Imagem enviada em WebP. Salve o cadastro e publique quando estiver pronto.';if(target===form){field(form,'photoPositionX').value=50;field(form,'photoPosition').value=50;field(form,'photoZoom').value=1;preview();crop.open();}}
       catch(error){status.textContent=error.message;feedback(error.message,true);}
       finally{input.value='';onBusy(-1);}
     });

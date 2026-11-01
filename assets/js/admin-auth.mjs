@@ -1,8 +1,8 @@
 import {setPersistence, browserSessionPersistence, signInWithEmailAndPassword, signOut, onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
-import {auth} from './firebase-client.mjs?v=20261101-rosters';
-import {ADMIN_EMAIL, assertAdmin, safeAdminPath} from './admin-auth-policy.mjs?v=20261101-rosters';
-import {verifyAuthAccess} from './admin-auth-access.mjs?v=20261101-rosters';
-import {firebaseConfig} from './firebase-config.mjs?v=20261101-rosters';
+import {auth} from './firebase-client.mjs?v=20261101-crop';
+import {ADMIN_EMAIL, assertAdmin, safeAdminPath} from './admin-auth-policy.mjs?v=20261101-crop';
+import {verifyAuthAccess} from './admin-auth-access.mjs?v=20261101-crop';
+import {firebaseConfig} from './firebase-config.mjs?v=20261101-crop';
 let persistence;
 function prepare() { return persistence ||= setPersistence(auth, browserSessionPersistence); }
 export function checkAccess() { return verifyAuthAccess(fetch, firebaseConfig.apiKey); }

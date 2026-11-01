@@ -1,6 +1,6 @@
-import {loadSiteConfig} from './site-data.mjs?v=20261101-rosters';
-import {releaseMedia} from './roster-media.mjs?v=20261101-rosters';
-import {personCard} from './roster-view.mjs?v=20261101-rosters';
+import {loadSiteConfig} from './site-data.mjs?v=20261101-crop';
+import {releaseMedia} from './roster-media.mjs?v=20261101-crop';
+import {personCard} from './roster-view.mjs?v=20261101-crop';
 const tabs=document.querySelector('#team-tabs'),panel=document.querySelector('#team-panel'),empty=document.querySelector('#teams-empty');
 try {
   const config=await loadSiteConfig(),teams=config.teams.filter(t=>t.visible);

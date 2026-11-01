@@ -53,3 +53,8 @@ Backups da versão antiga podem ser recuperados manualmente após o login. A imp
 `image-compress.mjs` reduz imagens no navegador, sem remover transparência. `admin-media.mjs` grava WebP em registros individuais de até 110.000 caracteres base64. Os arquivos são públicos por identificador, sem leitura pública da lista inteira; a conta administrativa só cria registros novos. Dados de imagem não acompanham as leituras de conteúdo. Essa abordagem usa o Realtime Database já disponível, sem credenciais adicionais de armazenamento; as imagens têm teto de 75 KB antes da codificação. Uma galeria maior deverá migrar o transporte para armazenamento de objetos, preservando as referências dos perfis.
 
 Os backups guardam as referências dos uploads, não o binário. Uploads substituídos são preservados; uma coleta futura precisa considerar todos os rascunhos e publicações antes de excluir arquivos. Não há exclusão automática de mídia em uso.
+
+
+## Enquadramento de fotos
+
+`photo-frame.mjs` compartilha a geometria do recorte entre `admin-photo-crop.mjs` e `roster-view.mjs`. Posição X/Y (0–100) e zoom (1–3) geram proporções relativas, mantendo o mesmo recorte no editor e em retratos de outros tamanhos. Perfis anteriores mantêm a posição vertical existente, X central e zoom 1. `photoPositionX` e `photoZoom` são opcionais na entrada e recebem valores padrão na validação. Silhuetas continuam usando seu enquadramento original. O ajuste não altera o arquivo nem faz novo upload.

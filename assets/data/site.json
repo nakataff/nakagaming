@@ -14,13 +14,15 @@
     "teamsTitle": "QUEM CARREGA A BANDEIRA.",
     "teamsIntro": "Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.",
     "leadersTitle": "QUEM CONSTRÓI COM A GUILDA.",
-    "leadersIntro": "Conheça as pessoas que organizam e representam a nossa comunidade."
+    "leadersIntro": "Conheça as pessoas que organizam e representam a nossa comunidade.",
+    "guildRecruitment": "O recrutamento da guilda é feito pelo Instagram oficial @nakateamff. Entre em contato por lá para saber os critérios e as vagas disponíveis."
   },
   "links": {
     "nakaInstagram": "https://www.instagram.com/nakagamingx/",
     "personalInstagram": "https://www.instagram.com/nakataff/",
     "centralInstagram": "https://www.instagram.com/centralfreefire_/",
-    "centralSite": "https://centralfreefire.com.br/"
+    "centralSite": "https://centralfreefire.com.br/",
+    "guildInstagram": "https://www.instagram.com/nakateamff/"
   },
   "teams": [],
   "leaders": []

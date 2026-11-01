@@ -1,9 +1,9 @@
-import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-rosters';
-import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-rosters';
-import {mountRosters} from './admin-rosters.mjs?v=20261101-rosters';
-import {clearPublishedCache} from './site-data.mjs?v=20261101-rosters';
-import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-rosters';
-import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-rosters';
+import {CONTENT_FIELDS, LINK_FIELDS, validatePublic, validateBackup, publicSnapshot} from './admin-schema.mjs?v=20261101-crop';
+import {repository,publishDraft} from './admin-cloud.mjs?v=20261101-crop';
+import {mountRosters} from './admin-rosters.mjs?v=20261101-crop';
+import {clearPublishedCache} from './site-data.mjs?v=20261101-crop';
+import {currentAdmin, getCurrentAdmin, watchSession, logout, goToLogin} from './admin-auth.mjs?v=20261101-crop';
+import {isAdminUser} from './admin-auth-policy.mjs?v=20261101-crop';
 
 if (window.location.pathname.endsWith('/index.html')) {
   window.location.replace(window.location.pathname.slice(0, -'index.html'.length) + window.location.search + window.location.hash);
@@ -193,7 +193,7 @@ function setupBackup() {
       let parsed;
       try { parsed = JSON.parse(await file.text()); } catch { throw new Error('Não foi possível ler o JSON. Selecione um backup válido.'); }
       pendingImport = validateBackup(parsed);
-      $('#import-summary').textContent = `${pendingImport.members.length} membros, 4 canais e os textos do portal. Nenhuma alteração foi aplicada à conta ainda.`;
+      $('#import-summary').textContent = `${pendingImport.members.length} membros, ${Object.keys(pendingImport.links).length} canais e os textos do portal. Nenhuma alteração foi aplicada à conta ainda.`;
       $('#import-review').hidden = false;
       feedback('Backup validado. Revise o resumo antes de confirmar a importação.');
     } catch (error) { feedback(error.message, true); }
@@ -249,6 +249,7 @@ try {
   showSaved();
   if (loaded.notice) feedback(loaded.notice, true);
   const path = document.body.dataset.adminPage;
+  if (path === '/admin/') $('#channel-count').textContent=String(Object.keys(data.links).length).padStart(2,'0');
   if (path === '/admin/') $('#member-count').textContent = String(data.members.length).padStart(2, '0');
   if (path === '/admin/site/') setupSite();
   if (path === '/admin/guilda/') setupGuild();

@@ -1,5 +1,5 @@
-import {validatePublic} from './admin-schema.mjs?v=20261101-rosters';
-import {firebaseConfig} from './firebase-config.mjs?v=20261101-rosters';
+import {validatePublic} from './admin-schema.mjs?v=20261101-crop';
+import {firebaseConfig} from './firebase-config.mjs?v=20261101-crop';
 const CACHE_KEY='naka-public-site-v2', TTL=120000;
 let pending;
 async function request(url) {

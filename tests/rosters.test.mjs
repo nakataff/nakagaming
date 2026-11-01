@@ -52,3 +52,10 @@ test('regras públicas isolam publicação, imagens e dados privados',async()=>{
  assert.equal(media['.read'],true);assert.match(media['.write'],/!data.exists/);assert.match(media.dataUrl['.validate'],/110000/);
  assert.match(policy.nakaGamingAdmin['.read'],/auth != null/);
 });
+test('configuração antiga recebe o canal da guilda sem alterar o Instagram da organização',()=>{
+ const old=structuredClone(base);delete old.links.guildInstagram;delete old.content.guildRecruitment;
+ const upgraded=validatePublic(old);
+ assert.equal(upgraded.links.guildInstagram,'https://www.instagram.com/nakateamff/');
+ assert.equal(upgraded.links.nakaInstagram,old.links.nakaInstagram);
+ assert.match(upgraded.content.guildRecruitment,/@nakateamff/);
+});

@@ -58,3 +58,5 @@
  .leaders-section {padding:60px 0}.leaders-heading {grid-template-columns:1fr;gap:20px;margin-bottom:25px}.leaders-grid {grid-template-columns:1fr}.leader-card {padding:22px 0}.leader-portrait {width:80px}
 }
 @media(prefers-reduced-motion:reduce) {.portrait-person {transition:none}}
+
+.portrait-person.has-crop {position:absolute;max-width:none;padding:0;transform:none!important}

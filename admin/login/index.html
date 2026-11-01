@@ -3,7 +3,7 @@
 <body class="admin-body login-body"><main class="login-layout"><section class="login-brand-panel"><a class="admin-brand" href="/"><img src="/assets/images/symbol.webp" width="45" height="45" alt=""><span>NAKA GAMING<small>PAINEL DE GESTÃO</small></span></a><div><p class="eyebrow">NOSSO NOME. NOSSA BANDEIRA.</p><h1>O PRÓXIMO<br>CAPÍTULO<br><span>COMEÇA AQUI.</span></h1><p>Um espaço para cuidar da organização<br>e construir o futuro da guilda.</p></div><a class="login-back" href="/">← Voltar para o site</a></section>
 <section class="login-form-panel"><div class="login-card"><span class="login-label">ACESSO ADMINISTRATIVO</span><h2>Bem-vindo de volta.</h2><p>Entre com a mesma conta e senha do painel da Central Free Fire.</p><form id="login-form"><label for="login-email">Conta administrativa</label><input id="login-email" name="email" type="email" autocomplete="username" value="admin@centralfreefire.com.br" readonly><label for="login-password">Senha</label><div class="password-field"><input id="login-password" name="password" type="password" autocomplete="current-password" required minlength="6" maxlength="4096"><button id="toggle-password" type="button" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button></div><p id="login-message" role="status" aria-live="polite">Conectando ao serviço de acesso…</p><button id="login-submit" class="admin-primary" type="submit" disabled>Entrar no painel <span>→</span></button></form><p class="login-note">Sua senha é validada pelo Firebase Authentication. Ela não é salva nos arquivos do site.</p><noscript><p>Ative o JavaScript para entrar no painel.</p></noscript></div><span class="login-bottom">NAKA GAMING / GESTÃO</span></section></main>
 <script type="module">
-import {safeAdminPath, authMessage} from '/assets/js/admin-auth-policy.mjs?v=20261101-rosters';
+import {safeAdminPath, authMessage} from '/assets/js/admin-auth-policy.mjs?v=20261101-crop';
 const form = document.querySelector('#login-form'), password = document.querySelector('#login-password'), submit = document.querySelector('#login-submit'), message = document.querySelector('#login-message');
 const next = safeAdminPath(new URLSearchParams(location.search).get('next'));
 document.querySelector('#toggle-password').addEventListener('click', (event) => {
@@ -11,7 +11,7 @@ document.querySelector('#toggle-password').addEventListener('click', (event) => 
   event.currentTarget.textContent = show ? 'Ocultar' : 'Mostrar'; event.currentTarget.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha'); event.currentTarget.setAttribute('aria-pressed', String(show));
 });
 try {
-  const auth = await import('/assets/js/admin-auth.mjs?v=20261101-rosters');
+  const auth = await import('/assets/js/admin-auth.mjs?v=20261101-crop');
   await auth.checkAccess();
   try { await auth.currentAdmin(); location.replace(next); } catch (error) { if (error.code !== 'naka/auth-required') throw error; }
   message.textContent = ''; submit.disabled = false;

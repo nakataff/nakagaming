@@ -4,16 +4,18 @@ export const CONTENT_FIELDS = {
   aboutIntro: ['Apresentação da Naka', 600], aboutDescription: ['Identidade da Naka', 1500],
   aboutMission: ['Propósito da Naka', 1500], guildIntro: ['Apresentação da guilda', 800],
   contactIntro: ['Introdução do contato', 400], footerTagline: ['Frase do rodapé', 200],
+  guildRecruitment: ['Texto de recrutamento da guilda', 600],
   teamsTitle: ['Título de equipes', 70], teamsIntro: ['Apresentação das equipes', 600],
   leadersTitle: ['Título da liderança', 70], leadersIntro: ['Apresentação da liderança', 600]
 };
 export const LINK_FIELDS = {
-  nakaInstagram: 'Instagram da Naka', personalInstagram: 'Instagram do Nakata',
+  nakaInstagram: 'Instagram da organização', guildInstagram: 'Instagram da guilda / recrutamento', personalInstagram: 'Instagram do Nakata',
   centralInstagram: 'Instagram da Central', centralSite: 'Site da Central'
 };
 export const ROLES = ['Jogador', 'Liderança', 'Comissão técnica', 'Criador de conteúdo'];
 export const STATUSES = ['Ativo', 'Reserva', 'Saída'];
-const CONTENT_DEFAULTS = {teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.'};
+const LINK_DEFAULTS={guildInstagram:'https://www.instagram.com/nakateamff/'};
+const CONTENT_DEFAULTS = {guildRecruitment:'O recrutamento da guilda é feito pelo Instagram oficial @nakateamff. Entre em contato por lá para saber os critérios e as vagas disponíveis.',teamsTitle:'QUEM CARREGA A BANDEIRA.', teamsIntro:'Nossas equipes. Diferentes trajetórias, o mesmo compromisso com a Naka.', leadersTitle:'QUEM CONSTRÓI COM A GUILDA.', leadersIntro:'Conheça as pessoas que organizam e representam a nossa comunidade.'};
 const object = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 function text(value, label, limit) {
   if (typeof value !== 'string' || !value.trim() || value.trim().length > limit) {
@@ -28,7 +30,7 @@ export function validatePublic(input) {
   const content = {}, links = {};
   for (const [key, [label, limit]] of Object.entries(CONTENT_FIELDS)) content[key] = text(input.content[key] ?? CONTENT_DEFAULTS[key], label, limit);
   for (const [key, label] of Object.entries(LINK_FIELDS)) {
-    const raw = text(input.links[key], label, 400);
+    const raw = text(input.links[key] ?? LINK_DEFAULTS[key], label, 400);
     let url;
     try { url = new URL(raw); } catch { throw new Error(`${label}: informe um endereço HTTPS válido.`); }
     if (url.protocol !== 'https:' || url.username || url.password) throw new Error(`${label}: use um endereço HTTPS sem credenciais.`);
@@ -99,7 +101,10 @@ function person(raw, leader=false) {
   if (!['contain','cover'].includes(photoFit)) throw new Error('Enquadramento inválido.');
   const photoPosition=raw.photoPosition ?? 50;
   if (!Number.isFinite(photoPosition) || photoPosition<0 || photoPosition>100) throw new Error('Posição da foto inválida.');
-  return {id:identity(raw.id,'Perfil'), nick:text(raw.nick,'Nick',40), name:optionalText(raw.name,'Nome',70), role:optionalText(raw.role,'Função',50) || (leader?'Liderança':'Jogador'), ffId, instagram:validateInstagram(raw.instagram), photo:validatePhoto(raw.photo), theme:(!leader && (raw.theme === undefined || raw.theme === 'inherit')) ? 'inherit' : theme(raw.theme), photoFit, photoPosition, visible:visible(raw.visible)};
+  const photoPositionX=raw.photoPositionX ?? 50,photoZoom=raw.photoZoom ?? 1;
+  if (!Number.isFinite(photoPositionX) || photoPositionX<0 || photoPositionX>100) throw new Error('Posição horizontal da foto inválida.');
+  if (!Number.isFinite(photoZoom) || photoZoom<1 || photoZoom>3) throw new Error('Zoom da foto: escolha entre 100% e 300%.');
+  return {id:identity(raw.id,'Perfil'), nick:text(raw.nick,'Nick',40), name:optionalText(raw.name,'Nome',70), role:optionalText(raw.role,'Função',50) || (leader?'Liderança':'Jogador'), ffId, instagram:validateInstagram(raw.instagram), photo:validatePhoto(raw.photo), theme:(!leader && (raw.theme === undefined || raw.theme === 'inherit')) ? 'inherit' : theme(raw.theme), photoFit, photoPosition, photoPositionX, photoZoom, visible:visible(raw.visible)};
 }
 function unique(list,label) {
   const ids=new Set();

@@ -1,5 +1,5 @@
-import {publicSnapshot} from './admin-schema.mjs?v=20261101-rosters';
-import {assertAdmin} from './admin-auth-policy.mjs?v=20261101-rosters';
+import {publicSnapshot} from './admin-schema.mjs?v=20261101-crop';
+import {assertAdmin} from './admin-auth-policy.mjs?v=20261101-crop';
 export function createPublisher({getUser,write,timestamp}) {
   return async (draft,revision)=>{
     assertAdmin(getUser());

@@ -18,3 +18,25 @@
 #player-preview .person-meta {font-size:10px}
 @media(max-width:1150px){.roster-manager-layout {grid-template-columns:1fr}.profile-editor-layout {grid-template-columns:minmax(0,1fr) 250px}}
 @media(max-width:760px){.profile-editor-layout {grid-template-columns:1fr}.profile-preview-box {position:static}.profile-preview-box .player-card {max-width:270px;margin:auto}.admin-topbar {align-items:flex-start}.admin-topbar>span {display:none}.admin-topbar>div {justify-content:flex-start}.admin-topbar .publish-button {font-size:11px}.profile-preview-box .leader-card {flex-direction:row;align-items:center}}
+
+.photo-crop-dialog {width:min(530px,calc(100vw - 28px));max-height:calc(100dvh - 30px);padding:0;border:1px solid #c6cfe4;background:#f7f7fb;color:#181b32;overflow:auto}
+.photo-crop-dialog::backdrop {background:rgba(8,12,28,.8)}
+.photo-crop-content {padding:25px}
+.photo-crop-content .card-heading {margin-bottom:15px;padding-bottom:15px}
+.photo-crop-content h2 {font:700 30px/1.1 var(--display);margin:0}
+.crop-close {background:none;border:0;font-size:28px;color:#647294;cursor:pointer;padding:0 5px}
+.crop-instructions {font-size:13px;color:#667493;line-height:1.5}
+.crop-stage {position:relative;width:min(260px,100%);margin:24px auto 12px;overflow:hidden;isolation:isolate;background:#171d36;touch-action:none;cursor:grab;outline:1px solid #a4afd0;outline-offset:3px}
+.crop-stage.is-circle {aspect-ratio:1;border-radius:50%}
+.crop-stage.is-portrait {aspect-ratio:4/5}
+.crop-stage.is-dragging {cursor:grabbing}
+.crop-stage:focus-visible {outline:3px solid #697fce}
+.crop-stage img {position:absolute;max-width:none;user-select:none;pointer-events:none}
+.crop-status {font-size:11px;color:#6e7d9e;text-align:center;min-height:34px;line-height:1.5}
+.photo-crop-dialog label {font-size:12px;margin-bottom:14px}
+.photo-crop-dialog input[type=range] {padding:7px 0;accent-color:#4c609b}
+.photo-crop-dialog .field-grid {grid-template-columns:1fr 1fr;gap:16px}
+.photo-crop-dialog output {float:right;color:#4e628f}
+.photo-crop-dialog .form-buttons {gap:8px}
+.photo-crop-dialog .admin-primary,.photo-crop-dialog .admin-secondary {padding:10px 13px;font-size:12px}
+@media(max-width:480px){.photo-crop-content {padding:20px}.crop-stage {width:220px}.photo-crop-dialog .form-buttons>* {flex:1;justify-content:center}.photo-crop-dialog .field-help {font-size:10px!important}}

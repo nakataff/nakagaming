@@ -123,3 +123,13 @@ As imagens podem vir de um endereço HTTPS, de um arquivo em `naka gaming/` ou d
 No portal, as imagens são carregadas sob demanda. Só a equipe da aba ativa é montada. Sem foto ou com link quebrado, a silhueta da arte escolhida permanece visível. Os cards são 4:5; as fotos dos líderes são quadradas/circulares. As artes otimizadas pesam cerca de 14–19 KB para fundos e 69–71 KB para silhuetas e são reutilizadas em cache.
 
 As diretrizes para manter o conteúdo personalizável no painel estão em [AGENTS.md](AGENTS.md). Não foram cadastrados elencos ou líderes fictícios na configuração inicial.
+
+
+### Enquadrar fotos de perfil
+
+O botão **Ajustar enquadramento** abre uma prévia circular para líderes e 4:5 para jogadores. Arraste a foto com mouse/toque ou use as setas do teclado. O zoom vai de 100% a 300%; os controles horizontal e vertical permitem ajustes finos. O editor abre automaticamente depois de enviar uma foto de perfil. **Aplicar enquadramento** altera o formulário; depois salve o cadastro e publique no site. **Cancelar** mantém o enquadramento anterior. A imagem enviada permanece a mesma: só posição e zoom são gravados, sem novos uploads.
+
+
+### Instagram da guilda e recrutamento
+
+A organização usa `@nakagamingx`. A guilda usa `@nakateamff`, que também é o canal oficial de recrutamento. O texto da pergunta sobre entrada na guilda e o link são editáveis em Conteúdo e canais. Configurações publicadas antes desse campo recebem o endereço e o texto oficiais como padrão, sem substituir os demais dados.
